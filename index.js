@@ -731,10 +731,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 						  },
 						},
 						]
-		return   client.replyMessage(
-			replyToken,
-			msg
-		);
+		return   msg;
 		
 	}else if(strCompare(command,"學習")){
 		usersGoogleMode[source.userId]=1;
