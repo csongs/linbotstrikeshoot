@@ -17,6 +17,7 @@ const  isNumeric = require("isnumeric");
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 
+
 const config = {
 
   //line chhanel 金鑰
@@ -79,11 +80,6 @@ function getQuestions() {
      range:encodeURI('問題'),
   }, function(err, response) {
      if (err) {
-	    console.log('config.googleInstalledClientId :'+ config.googleInstalledClientId);
-		console.log('config.googleInstalledClientSecret :'+ config.googleInstalledClientSecret);
-		console.log('config.googleOauth2AccessToken :'+ config.googleOauth2AccessToken);
-		console.log('config.googleOauth2RefreshToken :'+ config.googleOauth2RefreshToken);
-		console.log('config.googleSheetId :'+ config.googleSheetId);
 		
         console.log('讀取問題檔的API產生問題：' + err);
         return;
@@ -967,18 +963,7 @@ function jpGamewithWeb() {
 	 timer = setInterval(jpGamewithWeb, 30*60*1000); //每半小時抓取一次新資料
 	
 }
-//把爬蟲資料寫到excel
-var writeGamewithData2Excel=function(rawData,excelData){
-	//console.log(rawData)
-	/*
-	if(excelData===undefined){
-		insertExcel('攻略庫',rawData);
-	}else if(rawData.length>excelData.length){
-		insertExcel('攻略庫',rawData);
-	}
-	*/
-	
-};
+
 //=======gamertb=======
 
 //回傳怪物編號網址
@@ -989,18 +974,18 @@ var twGamertbWeb = function( number) {
 /**
 *  表情符號
 */
-var getNaploeonPic = function( number) {
+function getNaploeonPic( number) {
 	//獸神化
-	if(number==0)return "https://lh3.googleusercontent.com/TCxl6rtCPiFO37X7IJPbytOdfIPvy8ahln-wyAP5qrM5GETSWw1VJx-7vnFVSJ7r9p9QRS62d4pQcWh-2NymOSDmyh2wnV0s0GNBaFryM8XaLkWWnw7fgVyilqW18KuItdTWgz1RdD_rzvzlpBcova0xfSo_vlP6oGUTG9eczmT65DlO5QzJOkoW-ew5joBQF1TgTyAX6ENqeIpUIW3Wc4ArnwvjHcO0OT5KbwXC7mQS9ifdRC8ey5I50NVUb2Sm4yDwHxWRTVwWxZXnN2Il8sZz3Ze7zT8_NfAjSXLa7fM0Y140qdPvx6DnRf0CmOh-Bxshr1Rt6ILSVeT6dFWHR5_vwiJDkpMiHtH1dS-Zjcv5S2-xSBZAkyFg14Zb9jLWgI9ermi0UX8n_EdzWkMB2Nm3YCZYUSm8erZLt6uaLqPtxpsA4EsKxaHgtyS5WixmzFYob6-4eFPOWuWhYThUV24b-NuDlYdJiQJifUBgfsm3SOmiQT6NnuiTGkcrBnrF_0n7Etd-2dSa9tXKJwPu0Ky7mlOZXOmS5IrRf5fjcYUOuLmj7IQDZWiYuQfPF84xbpF8P8NpEfOGahCAJW0jHlCKnUAzRtZyBc27dVA=w600-h442-no"; 
+	if(number==0)return "https://imgur.com/QTijwU7"; 
 	//獸神化
-	if(number==1)return "https://lh3.googleusercontent.com/-8d7u_1f5sPwbHJcyMkwEpaYzvMfcv0dZKXZ0a_StUxhUrZE8wWmmgZhG94dd6fRf86aRYuPZ8-bMF1dvqw4loNLtDzQT-XDdAmqlBCi8kzWE9Zi2jk_n-VqPxbe7-8qAFOjZUp91wKmHfJaINAQjSLlyBeapNM9BuTpjB_Fa51vL2cXM9BxYREJECZKXW54asYU3PYu5zfcC2GM7Z2Xc966mteij2SmNN5MgRZAG_DV2knxjNAb_u0XwCD8cDYY5fyuYtFk2x_3gRGOx3z3zTjF5bkNzR7D98zwTV1rRFJ_zdx4ym8YNLuYc4XtO2U3F3jW1fAlBCa3WbTBraudpT1tWuBY_fDRnW7_5q5ht0vxdOONMBexM8AzBONsUGAhD2NkgJZsVT71Nj6-Arn0Ba7YYOHyKXEHEVSFrPcAClYb4z7N7njhqovLufAF4jaxnMBXCIiMdWAmz0rRe-z189lV_EKtrHhywb9hMfRlFw8jXe1aFdYpBU96kchvjhnwaEw3QNNeFRgIERG5jrN3VwJoCpZi8ybi68HkaMe-Is_AmPgdD9FgPqyM56yihHRP8TIsuC8rqynUKN4JdHCv-4H4krhhMt1ty5WUKEU=w661-h903-no"
-	if(number==2)return "https://lh3.googleusercontent.com/xsCjMOUrZEFigKTsWLf9K9mzQlCtXX3szaQfWXzaF-7tkVt2WciZaUDbmske92kOTzGBUcCd06LooOMjEZ3USKtiwCBRcxVaw-DK71KPf3zc5pZXd-OmBTavQgpxZg2usTyMoKdg00L_870rL5mtx_D91PQ53UNoQZkk31LsT89vYfLBF7hwSQokEs7fOqZpe-sfNSiftxC5s4Ar-8j7uSs5YrYpc_YZtumV_r1BW6E7nV6D3co-Bj8oYRb17WBM7AXxtfVQaRRo0lJuWKRWjLxGio1C6_lbgrDjRwDRkVCxl3BKhMm8ZXc_4v12_Ib7lH6ak-yDv0VcNuFga2W209BzUVypQbx_hnv-fLPqL7RGwwXpFQHP-sy887ZRYxYOOUgkStFCwadeheRCahXcpxRzKc1sHqInsDoVeQ8xIR8D2yomukuGNniSUCD5u53-HACNhrka5XqeF1GemHty6mAhjr166WKQLX4ILciShxHA3Gfl1QW2SC7iuDqAxn7ZgO-QMYos39MxqdtYccHHn-Pu_599D71-bOWsDe6tNItl938NCarB_473UWy__nlIY2RL8Gk1zKP7j3Ha3ike1oG9Pyj1SoSCK_eZwJY=w668-h943-no"
+	if(number==1)return "https://imgur.com/CbTB9Ms"
+	if(number==2)return "https://imgur.com/e1eEXpC"
 };
 
 /**
 *圖片處理
 */
-  var lineReplyPicture =function(imageUrl) {
+function lineReplyPicture(imageUrl) {
 	var messages= { type  : 'image',
                     originalContentUrl:  imageUrl.replace("http", "https"),
                     previewImageUrl:  imageUrl.replace("http", "https")
@@ -1013,7 +998,7 @@ var getNaploeonPic = function( number) {
  */
  
  //記憶功能
- var googleAsk=function(msg,source,userName){
+function googleAsk(msg,source,userName){
       var myId=source.userId;
 
 	  var ret;
@@ -1046,17 +1031,17 @@ var getNaploeonPic = function( number) {
       
  }
  //尋找相同關鍵字
-  var googleAnswerSet=function(answerArray,keyword){
+function googleAnswerSet(answerArray,keyword){
 	return answerArray.filter(answers => strCompare(keyword,answers[1]));
   }
   
    //尋找攻略相同關鍵字
-  var findKeySet=function(data,keyword){
+function findKeySet(data,keyword){
 	return data.filter(answers =>  strCompare(answers[1],keyword) || strCompare(answers[0],keyword));
   }
   
   //偵測攻略網址
-  var getMomstrikeUrlStatgeStr= function (str){
+function getMomstrikeUrlStatgeStr (str){
 	 //去掉換行
 	 str = str.replace(/(\r\n\t|\n|\r\t)/gm,"");
 	//正規表示法
@@ -1071,7 +1056,7 @@ var getNaploeonPic = function( number) {
 /**
 * 是否玩選擇遊戲
 */
-var isPlayChoice= function(text){
+function isPlayChoice(text){
 	var re=/\S+\s*choice\s+(\s?,?\S+)+/;
 	
 	var ret=false;
@@ -1080,17 +1065,7 @@ var isPlayChoice= function(text){
 	 return ret;
 }
 
-/**
-*成長紀錄
-*/
-var history= function(){
-	var lv0="2018.2.17 小拿誕生!!";
-	var lv1="2018.2.17 升到到Lv1 學會去查怪物編號!";
-	var lv1_1="2018.2.17 學會貼圖+一次回傳多話!";
-	var lv2="2018.2.18 升到到Lv2 學習字詞功能";
-	var lv3="2018.2.18 升到到Lv3 學習去找攻略網站";
-	var lv4="2018.3.18 升到到Lv4 會識別共鬥url,並找功略網址";
-}
+
 
 /**
 * util
