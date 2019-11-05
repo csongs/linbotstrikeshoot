@@ -714,7 +714,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 			
         ]
 		return msg;
-	}else if(strCompare(command,"help")){
+	}else if(strCompare(command,"help")){ //教學目錄
 		 var msg=[{
 						  type: 'template',
 						  altText: '此指令無法顯示><',
@@ -724,8 +724,8 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 							 "actions": [
 							  {
 								"type": "message",
-								"label": "小拿幫你決定",
-								"text": "小拿 choice 可愛 超可愛"
+								"label": "choice小遊戲",
+								"text": "choice小遊戲"
 							  }
 							]
 						  },
@@ -733,6 +733,28 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 						]
 		return   msg;
 		
+	}else if(strCompare(command,"choice小遊戲")){//choice小遊戲
+		var msg=[
+			{ 
+				type:'text',
+				text:"choice小遊戲-教學"
+			},
+			{
+				type:'text',
+				text:"小拿來幫你決定~🖤"
+			},
+			{
+				type:'text',
+				text:"舉例:"
+			},
+			{
+				type:'text',
+				text:"小拿 choice 可愛 超可愛"
+			}
+			
+        ]
+		return msg;
+	
 	}else if(strCompare(command,"學習")){
 		usersGoogleMode[source.userId]=1;
 		var msg=[	
