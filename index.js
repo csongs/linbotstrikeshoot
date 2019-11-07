@@ -374,14 +374,7 @@ function handleText(message, replyToken, source,userName) {
 			 ret=answersSet[x][2];
 		 }
 		 //console.log(ret) ;
-		var msg=[{ 
-				type:'text',
-				text:ret
-			}];
-		return   client.replyMessage(
-			replyToken,
-			msg,
-		);
+		replyText(replyToken,ret);
 		
 	}
    
@@ -786,16 +779,16 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 						  template: {
 							type: 'buttons',
 							thumbnailImageUrl: 'https://imgur.com/eSZ6TTu.jpg',
-							//title: '我目前會...',
+							title: '我目前會...',
 							text: '我目前會...',
 							actions: [
-							  { label: '幫你做決定~', type: 'message', uri: '小拿 choice 可愛 超可愛' },
+							  { label: '幫你做決定~', type: 'message', text: '小拿 choice 可愛 超可愛' },
 							  { label: 'line邀請關卡連結來找攻略', type: 'message', text: 'モンストでマルチしない？\n「玉楼-暴威の鬼神、乱逆の咎（超絶）」' },
 							  { label: '看到特定文字回話', type: 'message', text: '小拿 學習 小拿好可愛 謝謝你>///<' },
-							],
-						  },
+							]
+						  }
 					}
-						]
+				]
 		return   msg;
 		
 	}else if(strCompare(command,"學習 ")){
