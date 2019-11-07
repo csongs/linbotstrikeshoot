@@ -820,8 +820,8 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 		var msg="學習指令規格不對喔!<p>範例: 小拿 學習 小拿好可愛 謝謝你>///<"
 		if(items.length>=2){
 			
-			appendMyRowV2(items[0],items[1],myId,userName);
-			msg="好我記住了"
+			appendMyRowV2(items[0],items[1],source.userId,userName);
+			msg="好我記住了~"
 		}
 		return msg;
 	}else if(strCompare(command,"攻略")){
