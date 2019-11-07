@@ -294,13 +294,13 @@ function handleEvent(event) {
       }
 
     case 'follow':
-         client.replyMessage(replyToken,getDefaultMsgHello());
+         client.replyMessage(event.replyToken,getDefaultMsgHello());
 
     case 'unfollow':
       return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
 
     case 'join':
-	     client.replyMessage(replyToken,getDefaultMsgHello());
+	     client.replyMessage(event.replyToken,getDefaultMsgHello());
 
     case 'leave':
       return console.log(`Left: ${JSON.stringify(event)}`);
