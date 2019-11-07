@@ -377,7 +377,6 @@ function handleText(message, replyToken, source,userName) {
 		 
 		return   client.replyMessage(
 			replyToken,
-			type:'text',
 			text:ret,
 		);
 		
