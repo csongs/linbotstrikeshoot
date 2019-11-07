@@ -373,13 +373,14 @@ function handleText(message, replyToken, source,userName) {
 			 var x = Math.floor((Math.random() * answersSet.length));
 			 ret=answersSet[x][2];
 		 }
-		 console.log(ret) ;
-		 /*
-		return { 
+		 //console.log(ret) ;
+		 
+		return   client.replyMessage(
+			replyToken,
 			type:'text',
 			text:ret,
-		};
-		*/
+		);
+		
 	}
    
    
@@ -781,22 +782,23 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 						  altText: '目前無法顯示教學><"',
 						  template: {
 							type: 'buttons',
+							thumbnailImageUrl:https://imgur.com/eSZ6TTu.jpg,
 							text: '我目前會...',
 							 "actions": [
 							  {
 								"type": "message",
-								"label": "choice小遊戲\n小拿幫你做決定~",
+								"label": "幫你做決定~",
 								"text": "小拿 choice 可愛 超可愛"
 							  },
 							  {
 								"type": "message",
-								"label": "貼line邀請關卡連結\n幫你找攻略",
+								"label": "line邀請關卡連結來找攻略",
 								"text": "モンストでマルチしない？\n「玉楼-暴威の鬼神、乱逆の咎（超絶）」"
 								  
 							  },
 							  {
 								"type": "message",
-								"label":"教小拿回話",
+								"label":"看到特定文字回話",
 								"text": "小拿 學習 小拿好可愛 謝謝你>///<"  
 							  }
 							]
@@ -817,12 +819,18 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 		*/
 		command=command.replace("學習 ",'');
 		var items=command.split(/[\s+]/).filter(e=>e!=''); //選擇項目陣列
-		var msg="學習指令規格不對喔!<p>範例: 小拿 學習 小拿好可愛 謝謝你>///<";
+		var msgText="學習指令規格不對喔!<p>範例: 小拿 學習 小拿好可愛 謝謝你>///<";
 		if(items.length>=2){
 			
 			appendMyRowV2(items[0],items[1],source.userId,userName);
-			msg="記住~當「"+items[0]+"」回「"+items[1]+"」";
+			msgText="記住~當「"+items[0]+"」回「"+items[1]+"」";
 		}
+		var msg=[	
+			{ 
+				type:'text',
+				text:msgText
+			},
+		]
 		return msg;
 	}else if(strCompare(command,"攻略")){
 		var rawData;
