@@ -777,33 +777,22 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
         ]
 		return msg;
 	}else if(strCompare(command,"help") || strCompare(command,"教學")){ //教學目錄
-		 var msg=[{
+		 var msg=[
+					{
 						  type: 'template',
 						  altText: '目前無法顯示教學><"',
 						  template: {
-							"type": 'buttons',
-							"thumbnailImageUrl": "https://imgur.com/eSZ6TTu.jpg",
-							"text": '我目前會...',
-							 "actions": [
-							  {
-								"type": "message",
-								"label": "幫你做決定~",
-								"text": "小拿 choice 可愛 超可愛"
-							  },
-							  {
-								"type": "message",
-								"label": "line邀請關卡連結來找攻略",
-								"text": "モンストでマルチしない？\n「玉楼-暴威の鬼神、乱逆の咎（超絶）」"
-								  
-							  },
-							  {
-								"type": "message",
-								"label":"看到特定文字回話",
-								"text": "小拿 學習 小拿好可愛 謝謝你>///<"  
-							  }
-							]
+							type: 'buttons',
+							thumbnailImageUrl: 'https://imgur.com/eSZ6TTu.jpg',
+							//title: '我目前會...',
+							text: '我目前會...',
+							actions: [
+							  { label: '幫你做決定~', type: 'message', uri: '小拿 choice 可愛 超可愛' },
+							  { label: 'line邀請關卡連結來找攻略', type: 'message', text: 'モンストでマルチしない？\n「玉楼-暴威の鬼神、乱逆の咎（超絶）」' },
+							  { label: '看到特定文字回話', type: 'message', text: '小拿 學習 小拿好可愛 謝謝你>///<' },
+							],
 						  },
-						},
+					}
 						]
 		return   msg;
 		
