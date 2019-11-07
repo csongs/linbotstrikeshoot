@@ -44,7 +44,7 @@ var stageData=[];
 jpGamewithWeb();
 
 //回覆對話相關
-var Spell_Command ="小拿";
+var Spell_Command ="小拿 ";
 
 
 /**
@@ -262,13 +262,13 @@ function handleEvent(event) {
       }
 
     case 'follow':
-      return replyText(event.replyToken, '你好~我是怪物彈珠BOT~我叫小拿!');
+      return replyText(event.replyToken, getDefaultMsgHello());
 
     case 'unfollow':
       return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
 
     case 'join':
-      return replyText(event.replyToken, '你好~我是怪物彈珠BOT~我叫小拿!');
+      return replyText(event.replyToken, getDefaultMsgHello());
 
     case 'leave':
       return console.log(`Left: ${JSON.stringify(event)}`);
@@ -335,7 +335,7 @@ function handleText(message, replyToken, source,userName) {
 		
 		getAnswers();//獲取關鍵字
 		var ret="";
-		var answersSet=googleAnswerSet(myAnswers,command);
+		var answersSet=googleAnswerSet(myAnswers,message.text);
 		 console.log(answersSet);
 		 if(answersSet.length>0){
 			 var x = Math.floor((Math.random() * answersSet.length));
@@ -753,7 +753,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 							 "actions": [
 							  {
 								"type": "message",
-								"label": "choice小遊戲 - 小拿來幫你決定",
+								"label": "choice小遊戲<p>小拿來幫你決定",
 								"text": "小拿 choice 可愛 超可愛"
 							  }
 							]
