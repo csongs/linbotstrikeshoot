@@ -158,9 +158,6 @@ function appendMyRow(userId,userName) {
 }
 
 function appendMyRowV2(question,answer,userId,userName) {
-   //紀錄userID
-   users[userId].replies[totalSteps+1]=userId;
-   users[userId].replies[totalSteps+2]=userName;
    var request = {
       auth: oauth2Client,
       spreadsheetId: mySheetId,
