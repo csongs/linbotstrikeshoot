@@ -294,13 +294,13 @@ function handleEvent(event) {
       }
 
     case 'follow':
-      return   client.replyMessage(replyToken,getDefaultMsgHello());
+         client.replyMessage(replyToken,getDefaultMsgHello());
 
     case 'unfollow':
       return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
 
     case 'join':
-	  return   client.replyMessage(replyToken,getDefaultMsgHello());
+	     client.replyMessage(replyToken,getDefaultMsgHello());
 
     case 'leave':
       return console.log(`Left: ${JSON.stringify(event)}`);
@@ -815,11 +815,13 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 			},
 		]
 		*/
-		var items=str.split(/[\s+]/).filter(e=>e!='') //選擇項目陣列
+		command=command.replace("學習 ",'');
+		var items=command.split(/[\s+]/).filter(e=>e!='') //選擇項目陣列
 		var msg="學習指令規格不對喔!<p>範例: 小拿 學習 小拿好可愛 謝謝你>///<"
 		if(items.length>=2){
 			
 			appendMyRowV2(items[0],items[1],myId,userName);
+			msg="好我記住了"
 		}
 		return msg;
 	}else if(strCompare(command,"攻略")){
