@@ -158,7 +158,8 @@ function appendMyRow(userId,userName) {
 }
 
 function appendMyRowV2(question,answer,userId,userName) {
-   var date=new Date()
+   var data=[];
+   data[0]=new Date();
    var request = {
       auth: oauth2Client,
       spreadsheetId: mySheetId,
@@ -167,13 +168,7 @@ function appendMyRowV2(question,answer,userId,userName) {
       valueInputOption: 'RAW',
       resource: {
         "values": [
-			{
-				date,
-				question,
-				answer,
-				userId,
-				userName
-			}
+			data
         ]
       }
    };
