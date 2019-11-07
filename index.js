@@ -358,9 +358,10 @@ function handleText(message, replyToken, source,userName) {
 		);
 	}
 	//GOOGLE問卷模式
+	/*
 	else if(usersGoogleMode[source.userId]==1){
 		replyText(replyToken,googleAsk(message.text,source,userName));
-	}
+	}*/
 	
 	else { //對話模式
 		
@@ -815,12 +816,12 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 		]
 		*/
 		command=command.replace("學習 ",'');
-		var items=command.split(/[\s+]/).filter(e=>e!='') //選擇項目陣列
-		var msg="學習指令規格不對喔!<p>範例: 小拿 學習 小拿好可愛 謝謝你>///<"
+		var items=command.split(/[\s+]/).filter(e=>e!=''); //選擇項目陣列
+		var msg="學習指令規格不對喔!<p>範例: 小拿 學習 小拿好可愛 謝謝你>///<";
 		if(items.length>=2){
 			
 			appendMyRowV2(items[0],items[1],source.userId,userName);
-			msg="好我記住了~"
+			msg="記住~當「"+items[0]+"」回「"+items[1]+"」";
 		}
 		return msg;
 	}else if(strCompare(command,"攻略")){
