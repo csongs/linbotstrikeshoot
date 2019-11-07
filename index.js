@@ -6,13 +6,13 @@ const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
 
-const  request = require("request");
+const request = require("request");
 const cjkConv = require("cjk-conv");
 
-const  cheerio = require("cheerio");
+const cheerio = require("cheerio");
 const async = require('async');
 
-const  isNumeric = require("isnumeric");
+const isNumeric = require("isnumeric");
 
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
@@ -42,7 +42,9 @@ const config = {
 var timer;//定期更新
 var stageData=[];  
 jpGamewithWeb();
-  
+
+//回覆對話相關
+var Spell_Command ="小拿";
 
 
 /**
@@ -150,6 +152,9 @@ function appendMyRow(userId,userName) {
          return;
       }
    });
+   
+   //儲存後刷新資料庫
+   getAnswers();
 }
 
 
@@ -324,6 +329,25 @@ function handleText(message, replyToken, source,userName) {
 	//GOOGLE問卷模式
 	else if(usersGoogleMode[source.userId]==1){
 		replyText(replyToken,googleAsk(message.text,source,userName));
+	}
+	
+	else { //對話模式
+		
+		getAnswers();//獲取關鍵字
+		var ret="";
+		var answersSet=googleAnswerSet(myAnswers,command);
+		 console.log(answersSet);
+		 if(answersSet.length>0){
+			 var x = Math.floor((Math.random() * answersSet.length));
+			 ret=answersSet[x][2];
+		 }
+		 console.log(ret) ;
+		 /*
+		return { 
+			type:'text',
+			text:ret,
+		};
+		*/
 	}
    
    
@@ -611,16 +635,17 @@ app.listen(port, () => {
 
 //確認是否為command
 var checkCommand = function( msg) {
-  if(msg.indexOf('!')==0){
+  if(msg.indexOf(Spell_Command)==0){
 	return true;
   }else{
 	  return false;
   }
 };
 
-//獲得指令參數
+//獲得指令參數(去除 Spell_Command)
 var getCommandParameter = function( msgCommand){
-	var ret=msgCommand.substring(1);
+	var ret = msgCommand.replace(Spell_Command, '');//指令格式保留選項
+	//var ret=msgCommand.substring(1);
 	return ret;
 }
 
@@ -665,6 +690,8 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
  //觸發不同工作
  var excuteCommand = function( msgCommand,source,userName){
 	 var command=getCommandParameter(msgCommand);
+	 
+	 /* 先不讀台版攻略
 	if(isNumeric(command)){
 		var url=twGamertbWeb(command);
 		var commandUrl="怪物編號"+command+": "+url;
@@ -674,7 +701,9 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 		};
 		
 		return msg;
-	}else if(strCompare(command,"獸神")){
+	}else
+	*/
+	if(strCompare(command,"獸神")){
 		var picNumber= Math.floor((Math.random() * 3));
 		var msg=[
 			{ 
@@ -714,18 +743,18 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 			
         ]
 		return msg;
-	}else if(strCompare(command,"help")){ //教學目錄
+	}else if(strCompare(command,"help") || strCompare(command,"教學")){ //教學目錄
 		 var msg=[{
 						  type: 'template',
 						  altText: '此指令無法顯示><',
 						  template: {
 							type: 'buttons',
-							text: '教學',
+							text: '我目前會...',
 							 "actions": [
 							  {
 								"type": "message",
-								"label": "choice小遊戲",
-								"text": "choice小遊戲"
+								"label": "choice小遊戲 - 小拿來幫你決定",
+								"text": "小拿 choice 可愛 超可愛"
 							  }
 							]
 						  },
@@ -733,28 +762,6 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 						]
 		return   msg;
 		
-	}else if(strCompare(command,"choice小遊戲")){//choice小遊戲
-		var msg=[
-			{ 
-				type:'text',
-				text:"choice小遊戲-教學"
-			},
-			{
-				type:'text',
-				text:"小拿來幫你決定~🖤"
-			},
-			{
-				type:'text',
-				text:"舉例:"
-			},
-			{
-				type:'text',
-				text:"小拿 choice 可愛 超可愛"
-			}
-			
-        ]
-		return msg;
-	
 	}else if(strCompare(command,"學習")){
 		usersGoogleMode[source.userId]=1;
 		var msg=[	
@@ -835,12 +842,6 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 		//獲取關鍵字
 		getAnswers();
 		var ret="目前小拿看不懂喔><!";
-		var answersSet=googleAnswerSet(myAnswers,command);
-		 console.log(answersSet);
-		 if(answersSet.length>0){
-			 var x = Math.floor((Math.random() * answersSet.length));
-			 ret=answersSet[x][2];
-		 }
 		return { 
 			type:'text',
 			text:ret,
@@ -848,7 +849,33 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 	
 	}
 }
- 
+
+/**
+* 預設對話內容
+*/
+function getDefaultMsgHello(){
+	 var msg=[{ 
+			type:'text',
+			text:'你好~我是怪物彈珠BOT~我叫小拿!',
+			}, 
+			{
+					  type: 'template',
+					  altText: '請輸入「小拿 help」為你做教學',
+					  template: {
+						type: 'buttons',
+						text: '請按教學或輸入「小拿 help」',
+						 "actions": [
+						  {
+							"type": "message",
+							"label": "教學",
+							"text": "小拿 help"
+						  }
+						]
+					  },
+					},
+			]
+		return   msg;
+}
 
 /**
 * 網站部分
