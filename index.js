@@ -782,7 +782,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 						  altText: '目前無法顯示教學><"',
 						  template: {
 							type: 'buttons',
-							thumbnailImageUrl:'https://imgur.com/eSZ6TTu.jpg',
+							thumbnailImageUrl: "https://imgur.com/eSZ6TTu.jpg",
 							text: '我目前會...',
 							 "actions": [
 							  {
