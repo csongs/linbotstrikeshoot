@@ -160,6 +160,10 @@ function appendMyRow(userId,userName) {
 function appendMyRowV2(question,answer,userId,userName) {
    var data=[];
    data[0]=new Date();
+   data[1]=question;
+   data[2]=answer;
+   data[3]=userId,
+   data[4]=userName
    var request = {
       auth: oauth2Client,
       spreadsheetId: mySheetId,
