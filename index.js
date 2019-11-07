@@ -166,11 +166,13 @@ function appendMyRowV2(question,answer,userId,userName) {
       valueInputOption: 'RAW',
       resource: {
         "values": [
-		  new Date(),
-		  question,
-		  answer,
-          userId,
-		  userName
+			{
+				new Date(),
+				question,
+				answer,
+				userId,
+				userName
+			}
         ]
       }
    };
