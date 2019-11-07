@@ -157,6 +157,38 @@ function appendMyRow(userId,userName) {
    getAnswers();
 }
 
+function appendMyRowV2(question,answer,userId,userName) {
+   //紀錄userID
+   users[userId].replies[totalSteps+1]=userId;
+   users[userId].replies[totalSteps+2]=userName;
+   var request = {
+      auth: oauth2Client,
+      spreadsheetId: mySheetId,
+      range:encodeURI('問卷'),
+      insertDataOption: 'INSERT_ROWS',
+      valueInputOption: 'RAW',
+      resource: {
+        "values": [
+		  new Date(),
+		  question,
+		  answer,
+          userId,
+		  userName
+        ]
+      }
+   };
+   var sheets = google.sheets('v4');
+   sheets.spreadsheets.values.append(request, function(err, response) {
+      if (err) {
+         console.log('The API returned an error: ' + err);
+         return;
+      }
+   });
+   
+   //儲存後刷新資料庫
+   getAnswers();
+}
+
 
 //============GOOGLE API END============
 
@@ -262,13 +294,13 @@ function handleEvent(event) {
       }
 
     case 'follow':
-      return replyText(event.replyToken, getDefaultMsgHello());
+      return   client.replyMessage(replyToken,getDefaultMsgHello());
 
     case 'unfollow':
       return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
 
     case 'join':
-      return replyText(event.replyToken, getDefaultMsgHello());
+	  return   client.replyMessage(replyToken,getDefaultMsgHello());
 
     case 'leave':
       return console.log(`Left: ${JSON.stringify(event)}`);
@@ -746,15 +778,26 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 	}else if(strCompare(command,"help") || strCompare(command,"教學")){ //教學目錄
 		 var msg=[{
 						  type: 'template',
-						  altText: '此指令無法顯示><',
+						  altText: '目前無法顯示教學><"',
 						  template: {
 							type: 'buttons',
 							text: '我目前會...',
 							 "actions": [
 							  {
 								"type": "message",
-								"label": "choice小遊戲<p>小拿來幫你決定",
+								"label": "choice小遊戲\n小拿幫你做決定~",
 								"text": "小拿 choice 可愛 超可愛"
+							  },
+							  {
+								"type": "message",
+								"label": "貼line邀請關卡連結\n幫你找攻略",
+								"text": "モンストでマルチしない？\n「玉楼-暴威の鬼神、乱逆の咎（超絶）」"
+								  
+							  },
+							  {
+								"type": "message",
+								"label":"教小拿回話",
+								"text": "小拿 學習 小拿好可愛 謝謝你>///<"  
 							  }
 							]
 						  },
@@ -762,7 +805,8 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 						]
 		return   msg;
 		
-	}else if(strCompare(command,"學習")){
+	}else if(strCompare(command,"學習 ")){
+		/*
 		usersGoogleMode[source.userId]=1;
 		var msg=[	
 			{ 
@@ -770,6 +814,13 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 				text:googleAsk(command,source,userName)
 			},
 		]
+		*/
+		var items=str.split(/[\s+]/).filter(e=>e!='') //選擇項目陣列
+		var msg="學習指令規格不對喔!<p>範例: 小拿 學習 小拿好可愛 謝謝你>///<"
+		if(items.length>=2){
+			
+			appendMyRowV2(items[0],items[1],myId,userName);
+		}
 		return msg;
 	}else if(strCompare(command,"攻略")){
 		var rawData;
@@ -1008,7 +1059,7 @@ function lineReplyPicture(imageUrl) {
  *Google問卷處理
  */
  
- //記憶功能
+ //記憶功能(問卷功能先不用)
 function googleAsk(msg,source,userName){
       var myId=source.userId;
 
