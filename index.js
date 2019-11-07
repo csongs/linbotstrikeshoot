@@ -374,10 +374,13 @@ function handleText(message, replyToken, source,userName) {
 			 ret=answersSet[x][2];
 		 }
 		 //console.log(ret) ;
-		 
+		var msg=[{ 
+				type:'text',
+				text:ret
+			}];
 		return   client.replyMessage(
 			replyToken,
-			text:ret,
+			msg,
 		);
 		
 	}
