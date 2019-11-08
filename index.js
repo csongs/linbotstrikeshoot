@@ -368,7 +368,7 @@ function handleText(message, replyToken, source,userName) {
 		getAnswers();//獲取關鍵字
 		var ret="";
 		var answersSet=googleAnswerSet(myAnswers,message.text);
-		 console.log(answersSet);
+		 console.log("answersSet:"+answersSet);
 		 if(answersSet.length>0){
 			 var x = Math.floor((Math.random() * answersSet.length));
 			 ret=answersSet[x][2];
@@ -1088,7 +1088,7 @@ function googleAsk(msg,source,userName){
  }
  //尋找相同關鍵字
 function googleAnswerSet(answerArray,keyword){
-	return answerArray.filter(answers => keyword.indexOf(answers[1])>=0);
+	return answerArray.filter(answers => answers[1].indexOf(keyword)>=0);
   }
   
    //尋找攻略相同關鍵字
