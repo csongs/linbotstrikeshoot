@@ -1,9 +1,11 @@
 # 怪物彈珠BOT-小拿
 
 
-<a href=""><img src="doc/img/logo.png"  width="200" ></a>
+<img src="doc/img/logo.png"  width="200" >
+
 <a href="https://line.me/R/ti/p/%40aku3390y"><img src="doc/img/line1.png"  width="100" ></a>
-<a href=""><img src="doc/img/line2.png"  width="150" ></a>
+
+<img src="doc/img/line2.png"  width="150" >
 
 
 
@@ -13,6 +15,26 @@
 - 宣傳喜歡的腳色>///<
 
 # 介紹
+
+## 指令說明
+輸入`小拿 hlep` 或 `小拿 幫助`會有說明
+
+## choice小遊戲
+輸入 `小拿 {事情} choice {選項1} {選項2}` 或者 `小拿 choice {選項1} {選項2}`
+
+- 選項可以N個
+- 選項之前可以加',' 變成 `小拿 {事情} choice {選項1},{選項2}`
+
+## 共鬥網址連結找攻略網站
+
+- 利用`怪物彈珠app`內建line共鬥功能；把邀請貼到BOT看的到地方
+- 目前僅支援一般降臨/爆絕/超絕/轟絕 (不支援玉樓/霸塔/神殿)
+
+## 學習模式
+輸入 `小拿 學習 {偵測的文字} {回應的文字}`
+
+- 重複的話會隨機挑一個回話
+- 目前不支援刪除功能
 
 
 # 成長紀錄
