@@ -1086,7 +1086,7 @@ function googleAsk(msg,source,userName){
  }
  //尋找相同關鍵字
 function googleAnswerSet(answerArray,keyword){
-	return answerArray.filter(answers => answers[1].indexOf(keyword)>=0);
+	return answerArray.filter(answers => (answers[1].indexOf(keyword)>=0) && (keyword.indexOf(answers[1])>=0));
   }
   
    //尋找攻略相同關鍵字
