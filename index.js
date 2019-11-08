@@ -315,7 +315,7 @@ function handleEvent(event) {
   }
 }
 
-function handleText(message, replyToken, source,userName) {
+async function handleText(message, replyToken, source,userName) {
  // const buttonsImageURL = `${baseURL}/static/buttons/1040.jpg`;
    console.log(message.text);
 	//檢查身分(懲罰)
