@@ -1012,7 +1012,7 @@ function jpGamewithWeb() {
 			
 			
 		});
-	});
+	}).catch((error) => {console.error(error);}); ;
 
 	 timer = setInterval(jpGamewithWeb, 30*60*1000); //每半小時抓取一次新資料
 	
