@@ -360,20 +360,23 @@ function handleText(message, replyToken, source,userName) {
 	else { //對話模式
 		
 		getAnswers().then(async client => {
-			 console.log("debug: after getAnswers");
-			 var ret="";
-			 var answersSet=googleAnswerSet(myAnswers,message.text);
-			 console.log("answersSet:"+answersSet);
-			 if(answersSet==undefined){
-				  console.log("answersSet:undefined");
-			 }else if(answersSet.length>0){
-				 var x = Math.floor((Math.random() * answersSet.length));
-				 ret=answersSet[x][2];
-			 }
-			 //console.log(ret) ;
-			replyText(replyToken,ret);
-		  })
-		  .catch(console.error);
+			try {
+				   console.log("debug: after getAnswers");
+					 var ret="";
+					 var answersSet=googleAnswerSet(myAnswers,message.text);
+					 console.log("answersSet:"+answersSet);
+					if(answersSet.length>0){
+						 var x = Math.floor((Math.random() * answersSet.length));
+						 ret=answersSet[x][2];
+					 }
+					 //console.log(ret) ;
+					replyText(replyToken,ret);
+				}
+				catch(error) {
+				  console.error(error);
+				}
+			
+		  }).catch(console.error);
 			 
 		
 		
