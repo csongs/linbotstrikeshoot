@@ -101,25 +101,27 @@ function getQuestions() {
 
 
 //讀取'問卷'表單
-function getAnswers() {
-	  console.log("debug: start getAnswers");
-	var sheets = google.sheets('v4');
-	sheets.spreadsheets.values.get({
-     auth: oauth2Client,
-     spreadsheetId: mySheetId,
-     range:encodeURI('問卷'),
-  }, function(err, response) {
-	    if (err) return console.log('The API returned an error: ' + err);
-		var rows = response.values;
-			if (rows.length == 0) {
-			console.log('No data found.');
-			} else {
-				myAnswers=rows;
-				console.log('回答已更新！');
-			}
-		console.log("debug: end getAnswers");
-  });
-	  
+async function getAnswers() {
+	return new Promise((resolve, reject) => {
+		  console.log("debug: start getAnswers");
+		var sheets = google.sheets('v4');
+		sheets.spreadsheets.values.get({
+		 auth: oauth2Client,
+		 spreadsheetId: mySheetId,
+		 range:encodeURI('問卷'),
+	  }, function(err, response) {
+			if (err) return console.log('The API returned an error: ' + err);
+			var rows = response.values;
+				if (rows.length == 0) {
+				console.log('No data found.');
+				} else {
+					myAnswers=rows;
+					console.log('回答已更新！');
+				}
+			console.log("debug: end getAnswers");
+			resolve(response);//確認收到
+	  });
+	});  
 }
 
 //儲存'問卷'表單
@@ -313,7 +315,7 @@ function handleEvent(event) {
   }
 }
 
-async function handleText(message, replyToken, source,userName) {
+function handleText(message, replyToken, source,userName) {
  // const buttonsImageURL = `${baseURL}/static/buttons/1040.jpg`;
    console.log(message.text);
 	//檢查身分(懲罰)
@@ -357,19 +359,20 @@ async function handleText(message, replyToken, source,userName) {
 	
 	else { //對話模式
 		
-		await getAnswers();//獲取關鍵字
-		await new Promise(resolve=>{
+		getAnswers().then(async client => {
 			 console.log("debug: after getAnswers");
-			var ret="";
-			var answersSet=googleAnswerSet(myAnswers,message.text);
-			console.log("answersSet:"+answersSet);
+			 var ret="";
+			 var answersSet=googleAnswerSet(myAnswers,message.text);
+			 console.log("answersSet:"+answersSet);
 			 if(answersSet.length>0){
 				 var x = Math.floor((Math.random() * answersSet.length));
 				 ret=answersSet[x][2];
 			 }
 			 //console.log(ret) ;
 			replyText(replyToken,ret);
-		});
+		  })
+		  .catch(console.error);
+			 
 		
 		
 	}
