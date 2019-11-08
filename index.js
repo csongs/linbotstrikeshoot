@@ -780,7 +780,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 							type: 'buttons',
 							thumbnailImageUrl: 'https://imgur.com/eSZ6TTu.jpg',
 							title: '我目前會...',
-							text: '我目前會...',
+							//text: '我目前會...',
 							actions: [
 							  { label: '幫你做決定~', type: 'message', text: '小拿 choice 可愛 超可愛' },
 							  { label: 'line邀請關卡連結來找攻略', type: 'message', text: 'モンストでマルチしない？\n「玉楼-暴威の鬼神、乱逆の咎（超絶）」' },
@@ -1088,7 +1088,7 @@ function googleAsk(msg,source,userName){
  }
  //尋找相同關鍵字
 function googleAnswerSet(answerArray,keyword){
-	return answerArray.filter(answers => strCompare(keyword,answers[1]));
+	return answerArray.filter(answers => keyword==answers[1]);
   }
   
    //尋找攻略相同關鍵字
