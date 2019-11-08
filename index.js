@@ -367,9 +367,10 @@ async function handleText(message, replyToken, source,userName) {
 				if(answersSet.length>0){
 					 var x = Math.floor((Math.random() * answersSet.length));
 					 ret=answersSet[x][2];
-				 }
-				 //console.log(ret) ;
-				replyText(replyToken,ret);
+					  //console.log(ret) ;
+					replyText(replyToken,ret);
+				}
+				
 					
 				
 			  }).catch(console.error);
