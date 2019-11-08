@@ -1,10 +1,11 @@
 # 怪物彈珠BOT-小拿
 
- <img src="doc/img/logo.png" alt="Sample"  width="250" >
+ <img src="doc/img/logo.png"    width="250" >
 
- <img src="doc/img/line1.png"  >https://line.me/R/ti/p/%40aku3390y
+<a href="https://line.me/R/ti/p/%40aku3390y"><img src="doc/img/line1.png"  width="100" ></a>
 
- <img src="doc/img/line2.png"  >
+
+ <img src="doc/img/line2.png"    width="200">
 
 
 # 目的
