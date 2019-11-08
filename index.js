@@ -775,7 +775,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 		 var msg=[
 					{
 						  type: 'template',
-						  altText: '目前無法顯示教學><"',
+						  altText: '已顯示教學內容',
 						  template: {
 							type: 'buttons',
 							thumbnailImageUrl: 'https://imgur.com/eSZ6TTu.jpg',
@@ -784,7 +784,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 							actions: [
 							  { label: '幫你做決定~', type: 'message', text: '小拿 choice 可愛 超可愛' },
 							  { label: 'line邀請關卡連結來找攻略', type: 'message', text: 'モンストでマルチしない？\n「玉楼-暴威の鬼神、乱逆の咎（超絶）」' },
-							  { label: '看到特定文字回話', type: 'message', text: '小拿 學習 小拿好可愛 謝謝你>///<' },
+							  { label: '看到特定文字回話', type: 'message', text: '小拿 學習 小拿好可愛 謝謝你>///<' }
 							]
 						  }
 					}
