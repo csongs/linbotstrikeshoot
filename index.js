@@ -103,20 +103,23 @@ function getQuestions() {
 //讀取'問卷'表單
 function getAnswers() {
 	
-  var params = {
-	 auth: oauth2Client,
+ 
+
+   var sheets = google.sheets('v4').spreadsheets.values.get({
+     auth: oauth2Client,
      spreadsheetId: mySheetId,
-     range:encodeURI('問卷'),
-  };
-  var sheets = google.sheets('v4').get(params);
-   request.then(function(response) {
+     range:encodeURI('問題'),
+  });
+
+   sheets.then(function(response) {
        var rows = response.values;
 		 if (rows.length == 0) {
 			console.log('No data found.');
 		 } else {
 		   myAnswers=rows;
-		   //console.log(response.result);
 		   console.log('回答已更新！');
+		   //console.log(response.result);
+		   
 		 }
         
       }, function(reason) {
