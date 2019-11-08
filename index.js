@@ -102,7 +102,7 @@ function getQuestions() {
 
 //讀取'問卷'表單
 function getAnswers() {
-	 
+	  console.log("debug: start getAnswers");
 	var sheets = google.sheets('v4');
 	sheets.spreadsheets.values.get({
      auth: oauth2Client,
@@ -117,6 +117,7 @@ function getAnswers() {
 				myAnswers=rows;
 				console.log('回答已更新！');
 			}
+		console.log("debug: end getAnswers");
   });
 	  
 }
@@ -358,6 +359,7 @@ async function handleText(message, replyToken, source,userName) {
 		
 		await getAnswers();//獲取關鍵字
 		await new Promise(resolve=>{
+			 console.log("debug: after getAnswers");
 			var ret="";
 			var answersSet=googleAnswerSet(myAnswers,message.text);
 			console.log("answersSet:"+answersSet);
