@@ -14,6 +14,8 @@ const async = require('async');
 
 const isNumeric = require("isnumeric");
 
+const debug=false;
+
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 
@@ -101,31 +103,27 @@ function getQuestions() {
 
 
 //讀取'問卷'表單
-function getAnswers() {
-  var sheets = google.sheets('v4');
-  sheets.spreadsheets.values.get({
-     auth: oauth2Client,
-     spreadsheetId: mySheetId,
-     range:encodeURI('問卷'),
-  }, function(err, response) {
-     if (err) {
-		console.log('config.googleInstalledClientId :'+ config.googleInstalledClientId);
-		console.log('config.googleInstalledClientSecret :'+ config.googleInstalledClientSecret);
-		console.log('config.googleOauth2AccessToken :'+ config.googleOauth2AccessToken);
-		console.log('config.googleOauth2RefreshToken :'+ config.googleOauth2RefreshToken);
-		console.log('config.googleSheetId :'+ config.googleSheetId);
-        console.log('讀取回答檔的API產生問題：' + err);
-        return;
-     }
-     var rows = response.values;
-     if (rows.length == 0) {
-        console.log('No data found.');
-     } else {
-       myAnswers=rows;
-     
-       console.log('回答已更新！');
-     }
-  });
+async function getAnswers() {
+	return new Promise((resolve, reject) => {
+		 if(debug)console.log("debug: start getAnswers");
+		var sheets = google.sheets('v4');
+		sheets.spreadsheets.values.get({
+		 auth: oauth2Client,
+		 spreadsheetId: mySheetId,
+		 range:encodeURI('問卷'),
+	  }, function(err, response) {
+			if (err) return console.log('The API returned an error: ' + err);
+			var rows = response.values;
+				if (rows.length == 0) {
+				console.log('No data found.');
+				} else {
+					myAnswers=rows;
+					console.log('回答已更新！');
+				}
+			 if(debug)console.log("debug: end getAnswers");
+			resolve(response);//確認收到
+	  });
+	});  
 }
 
 //儲存'問卷'表單
@@ -319,7 +317,7 @@ function handleEvent(event) {
   }
 }
 
-function handleText(message, replyToken, source,userName) {
+async function handleText(message, replyToken, source,userName) {
  // const buttonsImageURL = `${baseURL}/static/buttons/1040.jpg`;
    console.log(message.text);
 	//檢查身分(懲罰)
@@ -362,17 +360,24 @@ function handleText(message, replyToken, source,userName) {
 	}*/
 	
 	else { //對話模式
+		return new Promise((resolve, reject) => {
+			getAnswers().then(async client => {
+			    if(debug)console.log("debug: after getAnswers");
+				 var ret="";
+				 var answersSet=googleAnswerSet(myAnswers,message.text);
+				 console.log("answersSet:"+answersSet);
+				if(answersSet.length>0){
+					 var x = Math.floor((Math.random() * answersSet.length));
+					 ret=answersSet[x][2];
+					  //console.log(ret) ;
+					replyText(replyToken,ret);//ret不能為空
+				}
+				
+					
+				
+			  }).catch(console.error);
+		}).catch((error) => {console.error(error);});  	 
 		
-		getAnswers();//獲取關鍵字
-		var ret="";
-		var answersSet=googleAnswerSet(myAnswers,message.text);
-		 console.log("answersSet:"+answersSet);
-		 if(answersSet.length>0){
-			 var x = Math.floor((Math.random() * answersSet.length));
-			 ret=answersSet[x][2];
-		 }
-		 //console.log(ret) ;
-		replyText(replyToken,ret);
 		
 	}
    
@@ -882,8 +887,6 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 		
 		
 	}else{
-		//獲取關鍵字
-		getAnswers();
 		var ret="目前小拿看不懂喔><!";
 		return { 
 			type:'text',
@@ -1012,7 +1015,7 @@ function jpGamewithWeb() {
 			
 			
 		});
-	});
+	}).catch((error) => {console.error(error);}); ;
 
 	 timer = setInterval(jpGamewithWeb, 30*60*1000); //每半小時抓取一次新資料
 	
@@ -1138,3 +1141,9 @@ function strCompare(a,b){
 function cjk(t){
 	return cjkConv.jpConvert['cjk2zht'](t);
 }
+
+// debug使用
+process.on('unhandledRejection', (reason, promise) => {
+   if(debug) console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+  // Application specific logging, throwing an error, or other logic here
+});
