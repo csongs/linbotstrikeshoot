@@ -14,6 +14,8 @@ const async = require('async');
 
 const isNumeric = require("isnumeric");
 
+const debug=false;
+
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 
@@ -103,7 +105,7 @@ function getQuestions() {
 //讀取'問卷'表單
 async function getAnswers() {
 	return new Promise((resolve, reject) => {
-		  console.log("debug: start getAnswers");
+		 if(debug)console.log("debug: start getAnswers");
 		var sheets = google.sheets('v4');
 		sheets.spreadsheets.values.get({
 		 auth: oauth2Client,
@@ -118,7 +120,7 @@ async function getAnswers() {
 					myAnswers=rows;
 					console.log('回答已更新！');
 				}
-			console.log("debug: end getAnswers");
+			 if(debug)console.log("debug: end getAnswers");
 			resolve(response);//確認收到
 	  });
 	});  
@@ -360,7 +362,7 @@ async function handleText(message, replyToken, source,userName) {
 	else { //對話模式
 		return new Promise((resolve, reject) => {
 			getAnswers().then(async client => {
-			   console.log("debug: after getAnswers");
+			    if(debug)console.log("debug: after getAnswers");
 				 var ret="";
 				 var answersSet=googleAnswerSet(myAnswers,message.text);
 				 console.log("answersSet:"+answersSet);
@@ -368,7 +370,7 @@ async function handleText(message, replyToken, source,userName) {
 					 var x = Math.floor((Math.random() * answersSet.length));
 					 ret=answersSet[x][2];
 					  //console.log(ret) ;
-					replyText(replyToken,ret);
+					replyText(replyToken,ret);//ret不能為空
 				}
 				
 					
@@ -1140,8 +1142,8 @@ function cjk(t){
 	return cjkConv.jpConvert['cjk2zht'](t);
 }
 
-//
+// debug使用
 process.on('unhandledRejection', (reason, promise) => {
-  console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+   if(debug) console.log('Unhandled Rejection at:', promise, 'reason:', reason);
   // Application specific logging, throwing an error, or other logic here
 });
