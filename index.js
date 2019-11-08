@@ -373,7 +373,7 @@ async function handleText(message, replyToken, source,userName) {
 					
 				
 			  }).catch(console.error);
-		});  	 
+		}).catch((error) => {console.error(error);});  	 
 		
 		
 	}
