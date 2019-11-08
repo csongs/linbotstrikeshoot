@@ -125,7 +125,7 @@ function getAnswers() {
 			myAnswers=rows;
 			console.log('回答已更新！');
 		}
-		return ret;
+		 return ret;
 	 }
      
   });
@@ -367,9 +367,9 @@ function handleText(message, replyToken, source,userName) {
 	
 	else { //對話模式
 		
-		//getAnswers();//獲取關鍵字
+		getAnswers();//獲取關鍵字
 		var ret="";
-		var answersSet=googleAnswerSet(getAnswers(),message.text);
+		var answersSet=googleAnswerSet(myAnswers,message.text);
 		 console.log("answersSet:"+answersSet);
 		 if(answersSet.length>0){
 			 var x = Math.floor((Math.random() * answersSet.length));
