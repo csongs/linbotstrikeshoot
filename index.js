@@ -364,7 +364,9 @@ function handleText(message, replyToken, source,userName) {
 			 var ret="";
 			 var answersSet=googleAnswerSet(myAnswers,message.text);
 			 console.log("answersSet:"+answersSet);
-			 if(answersSet.length>0){
+			 if(answersSet==undefined){
+				  console.log("answersSet:undefined");
+			 }else if(answersSet.length>0){
 				 var x = Math.floor((Math.random() * answersSet.length));
 				 ret=answersSet[x][2];
 			 }
