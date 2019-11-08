@@ -105,13 +105,13 @@ function getAnswers() {
 	
  
 
-   var sheets = google.sheets('v4').spreadsheets.values.get({
+   var request = google.sheets('v4').spreadsheets.values.get({
      auth: oauth2Client,
      spreadsheetId: mySheetId,
      range:encodeURI('問題'),
   });
 
-   sheets.then(function(response) {
+   request.then(function(response) {
        var rows = response.values;
 		 if (rows.length == 0) {
 			console.log('No data found.');
