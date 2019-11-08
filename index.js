@@ -102,31 +102,31 @@ function getQuestions() {
 
 //讀取'問卷'表單
 function getAnswers() {
-	var ret=[];
+	 
 	var sheets = google.sheets('v4');
-  sheets.spreadsheets.values.get({
+	sheets.spreadsheets.values.get({
      auth: oauth2Client,
      spreadsheetId: mySheetId,
      range:encodeURI('問卷'),
   }, function(err, response) {
-     if (err) {
-		console.log('config.googleInstalledClientId :'+ config.googleInstalledClientId);
-		console.log('config.googleInstalledClientSecret :'+ config.googleInstalledClientSecret);
-		console.log('config.googleOauth2AccessToken :'+ config.googleOauth2AccessToken);
-		console.log('config.googleOauth2RefreshToken :'+ config.googleOauth2RefreshToken);
-		console.log('config.googleSheetId :'+ config.googleSheetId);
-        console.log('讀取回答檔的API產生問題：' + err);
-        return ret;
-     }else{
-		var rows = response.values;
-		if (rows.length == 0) {
-        console.log('No data found.');
-		} else {
-			myAnswers=rows;
-			console.log('回答已更新！');
-		}
-		 return ret;
-	 }
+	   try {
+		   var rows = response.values;
+			if (rows.length == 0) {
+			console.log('No data found.');
+			} else {
+				myAnswers=rows;
+				console.log('回答已更新！');
+			}
+	   }catch(err){
+			console.log('config.googleInstalledClientId :'+ config.googleInstalledClientId);
+			console.log('config.googleInstalledClientSecret :'+ config.googleInstalledClientSecret);
+			console.log('config.googleOauth2AccessToken :'+ config.googleOauth2AccessToken);
+			console.log('config.googleOauth2RefreshToken :'+ config.googleOauth2RefreshToken);
+			console.log('config.googleSheetId :'+ config.googleSheetId);
+			console.log('讀取回答檔的API產生問題：' + err);
+        
+	   }
+     
      
   });
 	  
@@ -886,8 +886,6 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 		
 		
 	}else{
-		//獲取關鍵字
-		getAnswers();
 		var ret="目前小拿看不懂喔><!";
 		return { 
 			type:'text',
