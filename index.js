@@ -6,18 +6,18 @@ const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
 
-const  request = require("request");
+const request = require("request");
 const cjkConv = require("cjk-conv");
 
-const  cheerio = require("cheerio");
+const cheerio = require("cheerio");
 const async = require('async');
 
-const  isNumeric = require("isnumeric");
+const isNumeric = require("isnumeric");
 
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 
-
+//讀環境變數
 const config = {
 
   //line chhanel 金鑰
@@ -36,21 +36,25 @@ const config = {
   
   }
 
-//================
-/**
-* 攻略心得
-*/
-var timer;
+
+
+//功略網相關
+var timer;//定期更新
 var stageData=[];  
 jpGamewithWeb();
-  
+
+//回覆對話相關
+var Spell_Command ="小拿 ";
+
+
 /**
-* GOOGLE API
+* GOOGLE API for 問答功能
+* 初版採取問卷表單模式做練習
+* TODO: 之後改成一行指令處理；問卷可以改採用教學
 */
-//底下輸入client_secret.json檔案的內容
+  //底下輸入client_secret.json檔案的內容
 var myClientSecret={"installed":{"client_id":config.googleInstalledClientId,"project_id":"lithe-sonar-195513","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token",
 "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":config.googleInstalledClientSecret,"redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}}
-
 var auth = new googleAuth();
 var oauth2Client = new auth.OAuth2(myClientSecret.installed.client_id,myClientSecret.installed.client_secret, myClientSecret.installed.redirect_uris[0]);
 
@@ -60,18 +64,18 @@ oauth2Client.credentials ={"access_token":config.googleOauth2AccessToken,"refres
 //試算表的ID，引號不能刪掉
 var mySheetId=config.googleSheetId;
 
-var myQuestions=[];
-var myAnswers=[];
-var users=[];
-var usersGoogleMode=[];
+//問答功能需要的參數
+var myQuestions=[];//問題
+var myAnswers=[];//回答
+var users=[];//建立人
+var usersGoogleMode=[];//問答模式
 var totalSteps=0;
-var myReplies=[];
 
 //程式啟動後會去讀取試算表內的問題
 getQuestions();
 
 
-//這是讀取問題的函式
+//讀取'問題'表單(固定對話)
 function getQuestions() {
   var sheets = google.sheets('v4');
   sheets.spreadsheets.values.get({
@@ -96,13 +100,13 @@ function getQuestions() {
 }
 
 
-//這是讀取回答的函式
+//讀取'問卷'表單
 function getAnswers() {
   var sheets = google.sheets('v4');
   sheets.spreadsheets.values.get({
      auth: oauth2Client,
      spreadsheetId: mySheetId,
-     range:encodeURI('表單回應 1'),
+     range:encodeURI('問卷'),
   }, function(err, response) {
      if (err) {
 		console.log('config.googleInstalledClientId :'+ config.googleInstalledClientId);
@@ -124,7 +128,7 @@ function getAnswers() {
   });
 }
 
-//這是將取得的資料儲存進試算表的函式
+//儲存'問卷'表單
 function appendMyRow(userId,userName) {
    //紀錄userID
    users[userId].replies[totalSteps+1]=userId;
@@ -132,7 +136,7 @@ function appendMyRow(userId,userName) {
    var request = {
       auth: oauth2Client,
       spreadsheetId: mySheetId,
-      range:encodeURI('表單回應 1'),
+      range:encodeURI('問卷'),
       insertDataOption: 'INSERT_ROWS',
       valueInputOption: 'RAW',
       resource: {
@@ -148,69 +152,47 @@ function appendMyRow(userId,userName) {
          return;
       }
    });
+   
+  
 }
 
-//取得EXCEL資料
-function getExcelData(sheetName) {
-  var callback = typeof arguments[arguments.length - 1] === "function" ? arguments[arguments.length - 1] : function() {};
-  var ret;
-  var sheets = google.sheets('v4');
-  sheets.spreadsheets.values.get({
-     auth: oauth2Client,
-     spreadsheetId: mySheetId,
-     range:encodeURI(sheetName),
-  }, function(err, response) {
-     if (err) {
-        console.log('讀取'+sheetName+'的API產生問題：' + err);
-        callback('讀取'+sheetName+'的API產生問題：' + err);
-		
-     }
-     var rows = response.values;
-     if (rows.length == 0) {
-        console.log('No data found.');
-     } else {
-       ret=rows;
-     
-       console.log(sheetName+'已取得！');
-	   callback(  undefined,ret);
-     }
-  });
- 
-}
-
-//save excel
-function insertExcel(sheetName,data) {
-//data = Array.isArray(data) ? data : [data];
-
- 
-
+function appendMyRowV2(question,answer,userId,userName) {
+   var data=[];
+   data[0]=new Date();
+   data[1]=question;
+   data[2]=answer;
+   data[3]=userId,
+   data[4]=userName
    var request = {
       auth: oauth2Client,
       spreadsheetId: mySheetId,
-      range:encodeURI(sheetName),
-    insertDataOption: 'INSERT_ROWS',
+      range:encodeURI('問卷'),
+      insertDataOption: 'INSERT_ROWS',
       valueInputOption: 'RAW',
       resource: {
-         "values": [
-          data
+        "values": [
+			data
         ]
       }
-      
    };
    var sheets = google.sheets('v4');
    sheets.spreadsheets.values.append(request, function(err, response) {
       if (err) {
          console.log('The API returned an error: ' + err);
-		 
-         //return;
+         return;
       }
    });
-    console.log(sheetName+'已更新！');
+   
+   
 }
 
 
 //============GOOGLE API END============
 
+
+/**
+/* LINE API 核心 
+*/
 
 // create LINE SDK client
 const client = new line.Client(config);
@@ -309,13 +291,13 @@ function handleEvent(event) {
       }
 
     case 'follow':
-      return replyText(event.replyToken, '你好~我是怪物彈珠BOT~我叫小拿!');
+         client.replyMessage(event.replyToken,getDefaultMsgHello());
 
     case 'unfollow':
       return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
 
     case 'join':
-      return replyText(event.replyToken, '你好~我是怪物彈珠BOT~我叫小拿!');
+	     client.replyMessage(event.replyToken,getDefaultMsgHello());
 
     case 'leave':
       return console.log(`Left: ${JSON.stringify(event)}`);
@@ -341,9 +323,9 @@ function handleText(message, replyToken, source,userName) {
  // const buttonsImageURL = `${baseURL}/static/buttons/1040.jpg`;
    console.log(message.text);
 	//檢查身分(懲罰)
-	if(source.userId=="U080990787746c9f9c7c9d64d524a911c"){
+	//if(source.userId=="U080990787746c9f9c7c9d64d524a911c"){
 		/*replyText(replyToken,"他是陳密分身");*/
-	}
+	//}
 	
     //攻略url
 	var statgeUrl= excuteMomstrikeUrlStatgeStr(message.text,source,userName);
@@ -374,8 +356,24 @@ function handleText(message, replyToken, source,userName) {
 		);
 	}
 	//GOOGLE問卷模式
+	/*
 	else if(usersGoogleMode[source.userId]==1){
 		replyText(replyToken,googleAsk(message.text,source,userName));
+	}*/
+	
+	else { //對話模式
+		
+		getAnswers();//獲取關鍵字
+		var ret="";
+		var answersSet=googleAnswerSet(myAnswers,message.text);
+		 console.log("answersSet:"+answersSet);
+		 if(answersSet.length>0){
+			 var x = Math.floor((Math.random() * answersSet.length));
+			 ret=answersSet[x][2];
+		 }
+		 //console.log(ret) ;
+		replyText(replyToken,ret);
+		
 	}
    
    
@@ -661,23 +659,19 @@ app.listen(port, () => {
 //==============
 
 
-
-/*
-* 解析傳來字段
-*/
-
 //確認是否為command
 var checkCommand = function( msg) {
-  if(msg.indexOf('!')==0){
+  if(msg.indexOf(Spell_Command)==0){
 	return true;
   }else{
 	  return false;
   }
 };
 
-//獲得指令參數
+//獲得指令參數(去除 Spell_Command)
 var getCommandParameter = function( msgCommand){
-	var ret=msgCommand.substring(1);
+	var ret = msgCommand.replace(Spell_Command, '');//指令格式保留選項
+	//var ret=msgCommand.substring(1);
 	return ret;
 }
 
@@ -705,7 +699,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 				//line回話
 				 msg=[{
 						  type: 'template',
-						  altText: 'Carousel alt text',
+						  altText: '此指令無法顯示><',
 						  template: {
 							type: 'carousel',
 							columns:body,
@@ -722,6 +716,8 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
  //觸發不同工作
  var excuteCommand = function( msgCommand,source,userName){
 	 var command=getCommandParameter(msgCommand);
+	 
+	 /* 先不讀台版攻略
 	if(isNumeric(command)){
 		var url=twGamertbWeb(command);
 		var commandUrl="怪物編號"+command+": "+url;
@@ -731,7 +727,9 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 		};
 		
 		return msg;
-	}else if(strCompare(command,"獸神")){
+	}else
+	*/
+	if(strCompare(command,"獸神")){
 		var picNumber= Math.floor((Math.random() * 3));
 		var msg=[
 			{ 
@@ -771,12 +769,48 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 			
         ]
 		return msg;
-	}else if(strCompare(command,"學習")){
+	}else if(strCompare(command,"help") || strCompare(command,"教學")){ //教學目錄
+		 var msg=[
+					{
+						  type: 'template',
+						  altText: '已顯示教學內容',
+						  template: {
+							type: 'buttons',
+							thumbnailImageUrl: 'https://imgur.com/eSZ6TTu.jpg',
+							title: '我目前會...',
+							text: '指令教學',
+							actions: [
+							  { label: '幫你做決定~', type: 'message', text: '小拿 choice 可愛 超可愛' },
+							  { label: 'line邀請關卡連結來找攻略', type: 'message', text: 'モンストでマルチしない？\n「玉楼-暴威の鬼神、乱逆の咎（超絶）」' },
+							  { label: '看到特定文字回話', type: 'message', text: '小拿 學習 小拿好可愛 謝謝你>///<' }
+							]
+						  }
+					}
+				]
+		return   msg;
+		
+	}else if(strCompare(command,"學習 ")){
+		/*
 		usersGoogleMode[source.userId]=1;
 		var msg=[	
 			{ 
 				type:'text',
 				text:googleAsk(command,source,userName)
+			},
+		]
+		*/
+		command=command.replace("學習 ",'');
+		var items=command.split(/[\s+]/).filter(e=>e!=''); //選擇項目陣列
+		var msgText="學習指令規格不對喔!<p>範例: 小拿 學習 小拿好可愛 謝謝你>///<";
+		if(items.length>=2){
+			
+			appendMyRowV2(items[0],items[1],source.userId,userName);
+			msgText="記住~當「"+items[0]+"」回「"+items[1]+"」";
+		}
+		var msg=[	
+			{ 
+				type:'text',
+				text:msgText
 			},
 		]
 		return msg;
@@ -851,12 +885,6 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 		//獲取關鍵字
 		getAnswers();
 		var ret="目前小拿看不懂喔><!";
-		var answersSet=googleAnswerSet(myAnswers,command);
-		 console.log(answersSet);
-		 if(answersSet.length>0){
-			 var x = Math.floor((Math.random() * answersSet.length));
-			 ret=answersSet[x][2];
-		 }
 		return { 
 			type:'text',
 			text:ret,
@@ -864,7 +892,33 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 	
 	}
 }
- 
+
+/**
+* 預設對話內容
+*/
+function getDefaultMsgHello(){
+	 var msg=[{ 
+			type:'text',
+			text:'你好~我是怪物彈珠BOT~我叫小拿!',
+			}, 
+			{
+					  type: 'template',
+					  altText: '請輸入「小拿 help」為你做教學',
+					  template: {
+						type: 'buttons',
+						text: '請按教學或輸入「小拿 help」',
+						 "actions": [
+						  {
+							"type": "message",
+							"label": "教學",
+							"text": "小拿 help"
+						  }
+						]
+					  },
+					},
+			]
+		return   msg;
+}
 
 /**
 * 網站部分
@@ -976,10 +1030,10 @@ var twGamertbWeb = function( number) {
 */
 function getNaploeonPic( number) {
 	//獸神化
-	if(number==0)return "https://imgur.com/QTijwU7"; 
+	if(number==0)return "https://imgur.com/QTijwU7.jpg"; 
 	//獸神化
-	if(number==1)return "https://imgur.com/CbTB9Ms"
-	if(number==2)return "https://imgur.com/e1eEXpC"
+	if(number==1)return "https://imgur.com/CbTB9Ms.jpg"
+	if(number==2)return "https://imgur.com/e1eEXpC.jpg"
 };
 
 /**
@@ -997,7 +1051,7 @@ function lineReplyPicture(imageUrl) {
  *Google問卷處理
  */
  
- //記憶功能
+ //記憶功能(問卷功能先不用)
 function googleAsk(msg,source,userName){
       var myId=source.userId;
 
@@ -1032,7 +1086,7 @@ function googleAsk(msg,source,userName){
  }
  //尋找相同關鍵字
 function googleAnswerSet(answerArray,keyword){
-	return answerArray.filter(answers => strCompare(keyword,answers[1]));
+	return answerArray.filter(answers => answers[1].indexOf(keyword)>=0);
   }
   
    //尋找攻略相同關鍵字
