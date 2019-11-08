@@ -109,25 +109,14 @@ function getAnswers() {
      spreadsheetId: mySheetId,
      range:encodeURI('問卷'),
   }, function(err, response) {
-	   try {
-		   var rows = response.values;
+	    if (err) return console.log('The API returned an error: ' + err);
+		var rows = response.values;
 			if (rows.length == 0) {
 			console.log('No data found.');
 			} else {
 				myAnswers=rows;
 				console.log('回答已更新！');
 			}
-	   }catch(err){
-			console.log('config.googleInstalledClientId :'+ config.googleInstalledClientId);
-			console.log('config.googleInstalledClientSecret :'+ config.googleInstalledClientSecret);
-			console.log('config.googleOauth2AccessToken :'+ config.googleOauth2AccessToken);
-			console.log('config.googleOauth2RefreshToken :'+ config.googleOauth2RefreshToken);
-			console.log('config.googleSheetId :'+ config.googleSheetId);
-			console.log('讀取回答檔的API產生問題：' + err);
-        
-	   }
-     
-     
   });
 	  
 }
@@ -323,7 +312,7 @@ function handleEvent(event) {
   }
 }
 
-function handleText(message, replyToken, source,userName) {
+async function handleText(message, replyToken, source,userName) {
  // const buttonsImageURL = `${baseURL}/static/buttons/1040.jpg`;
    console.log(message.text);
 	//檢查身分(懲罰)
@@ -367,16 +356,19 @@ function handleText(message, replyToken, source,userName) {
 	
 	else { //對話模式
 		
-		getAnswers();//獲取關鍵字
-		var ret="";
-		var answersSet=googleAnswerSet(myAnswers,message.text);
-		 console.log("answersSet:"+answersSet);
-		 if(answersSet.length>0){
-			 var x = Math.floor((Math.random() * answersSet.length));
-			 ret=answersSet[x][2];
-		 }
-		 //console.log(ret) ;
-		replyText(replyToken,ret);
+		await getAnswers();//獲取關鍵字
+		await new Promise(resolve=>{
+			var ret="";
+			var answersSet=googleAnswerSet(myAnswers,message.text);
+			console.log("answersSet:"+answersSet);
+			 if(answersSet.length>0){
+				 var x = Math.floor((Math.random() * answersSet.length));
+				 ret=answersSet[x][2];
+			 }
+			 //console.log(ret) ;
+			replyText(replyToken,ret);
+		});
+		
 		
 	}
    
