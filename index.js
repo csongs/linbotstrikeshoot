@@ -102,30 +102,33 @@ function getQuestions() {
 
 //讀取'問卷'表單
 function getAnswers() {
-  var sheets = google.sheets('v4');
-  sheets.spreadsheets.values.get({
-     auth: oauth2Client,
+	
+  var params = {
+	 auth: oauth2Client,
      spreadsheetId: mySheetId,
      range:encodeURI('問卷'),
-  }, function(err, response) {
-     if (err) {
+  };
+  var sheets = google.sheets('v4').get(params);
+   request.then(function(response) {
+       var rows = response.values;
+		 if (rows.length == 0) {
+			console.log('No data found.');
+		 } else {
+		   myAnswers=rows;
+		   //console.log(response.result);
+		   console.log('回答已更新！');
+		 }
+        
+      }, function(reason) {
 		console.log('config.googleInstalledClientId :'+ config.googleInstalledClientId);
 		console.log('config.googleInstalledClientSecret :'+ config.googleInstalledClientSecret);
 		console.log('config.googleOauth2AccessToken :'+ config.googleOauth2AccessToken);
 		console.log('config.googleOauth2RefreshToken :'+ config.googleOauth2RefreshToken);
 		console.log('config.googleSheetId :'+ config.googleSheetId);
         console.log('讀取回答檔的API產生問題：' + err);
-        return;
-     }
-     var rows = response.values;
-     if (rows.length == 0) {
-        console.log('No data found.');
-     } else {
-       myAnswers=rows;
-     
-       console.log('回答已更新！');
-     }
-  });
+        console.error('error: ' + reason.result.error.message);
+      });
+	  
 }
 
 //儲存'問卷'表單
