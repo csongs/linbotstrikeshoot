@@ -1,5 +1,11 @@
-# linbotstrikeshoot
-- 怪物彈珠BOT-小拿
+# 怪物彈珠BOT-小拿
+
+![小拿](doc\img\logo.png)
+
+![](doc\img\line1.png)(https://line.me/R/ti/p/%40aku3390y)
+
+![](doc\img\line2.png)
+
 
 # 目的
 - 練習nodejs專案建立line機器人
