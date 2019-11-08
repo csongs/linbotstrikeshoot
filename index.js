@@ -153,8 +153,7 @@ function appendMyRow(userId,userName) {
       }
    });
    
-   //儲存後刷新資料庫
-   getAnswers();
+  
 }
 
 function appendMyRowV2(question,answer,userId,userName) {
@@ -184,8 +183,7 @@ function appendMyRowV2(question,answer,userId,userName) {
       }
    });
    
-   //儲存後刷新資料庫
-   getAnswers();
+   
 }
 
 
