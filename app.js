@@ -24,7 +24,7 @@ const isNumeric = require("isnumeric");
 
 
 //const settings = require('./settings');//客製化設定
-const skstUtil = require('./skstUtil.js');
+const skstUtil = require('./skstUtil');
 
 /**
  * 控制變數
