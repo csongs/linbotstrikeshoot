@@ -8,7 +8,7 @@ const cheerio = require("cheerio"); //爬蟲需要的套件
 const cjkConv = require("cjk-conv");//中日韓編碼轉換
 const google = require('googleapis');//google api
 const googleAuth = require('google-auth-library');//google auth
-//const settings = require('./settings');//客製化設定
+
 
 const fs = require('fs');
 const path = require('path');
@@ -21,6 +21,10 @@ const request = require("request");
 const async = require('async');
 
 const isNumeric = require("isnumeric");
+
+
+//const settings = require('./settings');//客製化設定
+const skstUtil = require('./skstUtil.js');
 
 /**
  * 控制變數
@@ -351,7 +355,7 @@ async function handleText(message, replyToken, source,userName) {
 	}
 	
 	//玩選擇遊戲
-	else if(isPlayChoice(message.text)){
+	else if(skstUtil.isPlayChoice(message.text)){
 		var str = message.text.replace(/[\s\S]+choice/g, '');//指令格式保留選項
 		var items=str.split(/[\s+,+]/).filter(e=>e!='') //選擇項目陣列
 		var item=items[Math.floor(Math.random()*(items.length))] //隨機選一個項目
@@ -1125,18 +1129,7 @@ function getMomstrikeUrlStatgeStr (str){
 	 console.log('getMomstrikeUrlStatgeStr:'+ret);
 	return ret;
   }
-  
-/**
-* 是否玩選擇遊戲
-*/
-function isPlayChoice(text){
-	var re=/\S+\s*choice\s+(\s?,?\S+)+/;
-	
-	var ret=false;
-	if(text.match(re)!=null){ret= true}
-	 console.log(text+':'+ret);
-	 return ret;
-}
+
 
 
 
