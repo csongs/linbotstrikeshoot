@@ -17,8 +17,6 @@ const cp = require('child_process');
 const request = require("request");
 
 
-const lineRouter = require('./routes/line');
-
 
 const async = require('async');
 
