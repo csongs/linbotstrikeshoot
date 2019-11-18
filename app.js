@@ -1007,7 +1007,7 @@ function jpGamewithWeb() {
 					var temp5=($(this).children("td").children("a").attr("href"));//圖鑑連結
 
 					
-					 if ( !isEmpty(temp1) && !isEmpty(temp2) && !isEmpty(temp3) && !isEmpty(temp4))
+					 if ( !skstUtil.isEmpty(temp1) && !skstUtil.isEmpty(temp2) && !skstUtil.isEmpty(temp3) && !skstUtil.isEmpty(temp4))
 					 {
 							item[index2] = new Array();
 							item[index2][0]=temp1;
