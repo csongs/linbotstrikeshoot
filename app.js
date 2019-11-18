@@ -1,23 +1,54 @@
-﻿
+﻿/**
+ * Module dependencies.
+ */
 
-const line = require('@line/bot-sdk');
-const express = require('express');
+
+
+const line = require('@line/bot-sdk'); // line sdk
+const express = require('express'); //web 需要的套件
+const cheerio = require("cheerio"); //爬蟲需要的套件
+const cjkConv = require("cjk-conv");//中日韓編碼轉換
+const google = require('googleapis');//google api
+const googleAuth = require('google-auth-library');//google auth
+
+
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
 
 const request = require("request");
-const cjkConv = require("cjk-conv");
 
-const cheerio = require("cheerio");
+
+
 const async = require('async');
 
 const isNumeric = require("isnumeric");
 
-const debug=false;
 
-var google = require('googleapis');
-var googleAuth = require('google-auth-library');
+//const settings = require('./settings');//客製化設定
+const skstUtil = require('./lib/skstUtil');
+
+
+/**
+ * 控制變數
+ */
+var debug=false;
+//功略網相關
+var timer;//定期更新
+var stageData=[];  
+jpGamewithWeb();
+
+//回覆對話相關
+var Spell_Command ="小拿 ";
+
+
+
+
+
+
+/**
+ * Configuration
+ */
 
 //讀環境變數
 const config = {
@@ -38,15 +69,17 @@ const config = {
   
   }
 
+/**
+ * run
+ */
+// create LINE SDK client
+const client = new line.Client(config);
+
+// create Express app
+// about Express itself: https://expressjs.com/
+const app = express();
 
 
-//功略網相關
-var timer;//定期更新
-var stageData=[];  
-jpGamewithWeb();
-
-//回覆對話相關
-var Spell_Command ="小拿 ";
 
 
 /**
@@ -188,16 +221,7 @@ function appendMyRowV2(question,answer,userId,userName) {
 //============GOOGLE API END============
 
 
-/**
-/* LINE API 核心 
-*/
 
-// create LINE SDK client
-const client = new line.Client(config);
-
-// create Express app
-// about Express itself: https://expressjs.com/
-const app = express();
 
 // serve static and downloaded files
 //app.use('/static', express.static('static'));
@@ -214,7 +238,6 @@ app.post('/', line.middleware(config), (req, res) => {
   Promise
     .all(req.body.events.map(handleEvent))
 	 .then((result) => res.json(result))
-     //.then(() => res.end())
 	.catch((err) => {
       console.error(err);
       res.status(500).end();
@@ -335,7 +358,7 @@ async function handleText(message, replyToken, source,userName) {
 	}
 	
 	//玩選擇遊戲
-	else if(isPlayChoice(message.text)){
+	else if(skstUtil.isPlayChoice(message.text)){
 		var str = message.text.replace(/[\s\S]+choice/g, '');//指令格式保留選項
 		var items=str.split(/[\s+,+]/).filter(e=>e!='') //選擇項目陣列
 		var item=items[Math.floor(Math.random()*(items.length))] //隨機選一個項目
@@ -346,7 +369,7 @@ async function handleText(message, replyToken, source,userName) {
 	
 	//如果是指令
 	else if(checkCommand( message.text)){
-		
+
 		var msg=message.text;
 		return   client.replyMessage(
 			replyToken,
@@ -958,7 +981,7 @@ function jpGamewithWeb() {
 					var temp4=($(this).parents('td').next().children('a').attr('href'));//關卡連結
 					var temp5=($(this).parent('a').attr('href'));//圖鑑連結
 
-					 if ( !isEmpty(temp1) && !isEmpty(temp2) && !isEmpty(temp3) && !isEmpty(temp4))
+					 if ( !skstUtil.isEmpty(temp1) && !skstUtil.isEmpty(temp2) && !skstUtil.isEmpty(temp3) && !skstUtil.isEmpty(temp4))
 					 {
 							item2[index] = new Array();
 							item2[index][0]=temp1;
@@ -1109,27 +1132,13 @@ function getMomstrikeUrlStatgeStr (str){
 	 console.log('getMomstrikeUrlStatgeStr:'+ret);
 	return ret;
   }
-  
-/**
-* 是否玩選擇遊戲
-*/
-function isPlayChoice(text){
-	var re=/\S+\s*choice\s+(\s?,?\S+)+/;
-	
-	var ret=false;
-	if(text.match(re)!=null){ret= true}
-	 console.log(text+':'+ret);
-	 return ret;
-}
+
 
 
 
 /**
 * util
 */
-function isEmpty(value){
-  return (value == null || value.length === 0);
-}
 
 function strCompare(a,b){
 	a=a.replace('・','');
