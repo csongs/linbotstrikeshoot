@@ -2,6 +2,8 @@
  * Module dependencies.
  */
 
+
+
 const line = require('@line/bot-sdk'); // line sdk
 const express = require('express'); //web 需要的套件
 const cheerio = require("cheerio"); //爬蟲需要的套件
@@ -25,6 +27,7 @@ const isNumeric = require("isnumeric");
 
 //const settings = require('./settings');//客製化設定
 const skstUtil = require('./lib/skstUtil');
+
 
 /**
  * 控制變數
@@ -366,7 +369,7 @@ async function handleText(message, replyToken, source,userName) {
 	
 	//如果是指令
 	else if(checkCommand( message.text)){
-		
+
 		var msg=message.text;
 		return   client.replyMessage(
 			replyToken,
@@ -978,7 +981,7 @@ function jpGamewithWeb() {
 					var temp4=($(this).parents('td').next().children('a').attr('href'));//關卡連結
 					var temp5=($(this).parent('a').attr('href'));//圖鑑連結
 
-					 if ( !checEmpty(temp1) && !checEmpty(temp2) && !checEmpty(temp3) && !checEmpty(temp4))
+					 if ( !skstUtil.isEmpty(temp1) && !skstUtil.isEmpty(temp2) && !skstUtil.isEmpty(temp3) && !skstUtil.isEmpty(temp4))
 					 {
 							item2[index] = new Array();
 							item2[index][0]=temp1;
