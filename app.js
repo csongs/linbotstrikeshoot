@@ -24,7 +24,7 @@ const isNumeric = require("isnumeric");
 
 
 //const settings = require('./settings');//客製化設定
-const skstUtil = require('./skstUtil');
+const skstUtil = require('./lib/skstUtil');
 
 /**
  * 控制變數
@@ -978,7 +978,7 @@ function jpGamewithWeb() {
 					var temp4=($(this).parents('td').next().children('a').attr('href'));//關卡連結
 					var temp5=($(this).parent('a').attr('href'));//圖鑑連結
 
-					 if ( !isEmpty(temp1) && !isEmpty(temp2) && !isEmpty(temp3) && !isEmpty(temp4))
+					 if ( !checEmpty(temp1) && !checEmpty(temp2) && !checEmpty(temp3) && !checEmpty(temp4))
 					 {
 							item2[index] = new Array();
 							item2[index][0]=temp1;
@@ -1136,9 +1136,6 @@ function getMomstrikeUrlStatgeStr (str){
 /**
 * util
 */
-function isEmpty(value){
-  return (value == null || value.length === 0);
-}
 
 function strCompare(a,b){
 	a=a.replace('・','');
