@@ -831,7 +831,7 @@ function jpGamewithWeb() {
 					let gamewithWebDTO = new GamewithWebDTO(
 						($(this).data('col1')),//名稱
 						($(this).data('col2')),//關卡
-						($(this).children('td').children('div').children('a').children('img').attr('src'))//圖片
+						($(this).children('td').children('div').children('a').children('img').attr('src')),//圖片
 						($(this).children("td").next().children("a").attr("href")),//關卡連結
 						($(this).children("td").children("a").attr("href")),//圖鑑連結
 					);
