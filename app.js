@@ -27,6 +27,7 @@ const isNumeric = require("isnumeric");
 //const settings = require('./settings');//客製化設定
 const skstUtil = require('./lib/skstUtil');
 const botModel = require('./model/botDTO');
+var GamewithWebDTO = require("./model/gamewithWebDTO");
 
 
 /**
@@ -693,10 +694,10 @@ app.listen(port, () => {
 //攻略url
 function executeMonstrikeUrlStageStr(inputMsg,source,userName){
 	//攻略網址偵測
-	let stageStr=skstUtil.getMonstrikeUrlStageStr(inputMsg);
-	if(stageStr!=null){
+	let stageKeyword=skstUtil.getMonstrikeUrlStageStr(inputMsg);
+	if(stageKeyword!=null){
 		//TODO 獨立成一個方法
-		let ansData=findKeySet(stageData,stageStr);
+		let ansData=skstUtil.selectKeySet(stageData,stageKeyword);
 		let msg = "";
 		if(ansData.length>0){
 				ansData=ansData.slice(0,5);
@@ -733,20 +734,7 @@ function executeCommand ( msgCommand,source,userName){
 	 let command = msgCommand.replace(botModel.spellCommand, '');//指令格式保留選項
 
 	if(skstUtil.strContain(command,"獸神")){
-		let picNumber= Math.floor((Math.random() * 3));
-		let msg=[
-			{ 
-				type:'text',
-				text:"等很久了>///<"
-			},
-			{
-				type: 'image',
-				originalContentUrl: getNaploeonPic(picNumber),
-				previewImageUrl: getNaploeonPic(picNumber),
-			}
-        ]
-		return msg;
-		
+		return botModel.getDefaultMsgCustom01();
 	}else if(skstUtil.strContain(command,"測試")){
 		return botModel.getDefaultMsgTest();
 	}else if(skstUtil.strContain(command,"help") || skstUtil.strContain(command,"教學")){ //教學目錄
@@ -777,79 +765,8 @@ function executeCommand ( msgCommand,source,userName){
 			},
 		]
 		return msg;
-	}else if(skstUtil.strContain(command,"攻略")){
-		var rawData;
-		var excelData;
-
-		//去找攻略查詢字段
-		var newstr=command.replace("攻略", '').trim();
-		if(newstr.length<=0){
-			 var msg=[	
-				{ 
-					type:'text',
-					text:'請在!攻略後輸入要找的字串喔!'
-				},
-			]
-			return msg;
-		}else{
-			var ansData=findKeySet(stageData,newstr);
-			var msg;
-			if(ansData.length>0){
-				ansData=ansData.slice(0,5);
-				var body=  ansData.map((data) => ({ 
-								thumbnailImageUrl: data[2],
-								title: data[0],
-								text: data[1],
-								actions:
-									[
-										{ label: '圖鑑資料', type: 'uri', uri: data[4] },
-										{ label: '前往攻略', type: 'uri', uri: data[3] },
-									],
-							}));
-				
-				//line回話不能超過5個
-				if(ansData.length>5){
-					 msg=[{
-						  type: 'template',
-						  altText: 'Carousel alt text',
-						  template: {
-							type: 'carousel',
-							columns:body,
-						  },
-						},
-						]
-				}else{
-					 msg={
-						  type: 'template',
-						  altText: 'Carousel alt text',
-						  template: {
-							type: 'carousel',
-							columns:body,
-						  },
-						}
-				}
-				
-							
-			}else{
-				 msg=[	
-				{ 
-					type:'text',
-					text:'目前 '+newstr+' 找不到喔 換別的試試看~~'
-				},]
-					
-			}
-			return msg;
-		
-		
-		}
-		
-		
 	}else{
-		var ret="目前小拿看不懂喔><!";
-		return { 
-			type:'text',
-			text:ret,
-		};
+		return botModel.getDefaultMsg();
 	
 	}
 }
@@ -883,21 +800,23 @@ function jpGamewithWeb() {
 				$("tr").has('data-col3')
 				//第一種規則
 				$(".js-lazyload-fixed-size-img.c-blank-img.w-article-img").each(function(i, elem){
+					let gamewithWebDTO = new GamewithWebDTO(
+						($(this).parents('a').text().replace(/<[^>]*>/g, '')),//名稱
+						($(this).parents('td').next().text()),//關卡
+						($(this).attr('data-original')),//圖片
+						($(this).parents('td').next().children('a').attr('href')),//關卡連結
+						($(this).parent('a').attr('href')),//圖鑑連結
+					);
 
-					var temp1=($(this).parents('a').text().replace(/<[^>]*>/g, ''));//名稱
-					var temp2=($(this).parents('td').next().text());//關卡
-					var temp3=($(this).attr('data-original'));//圖片
-					var temp4=($(this).parents('td').next().children('a').attr('href'));//關卡連結
-					var temp5=($(this).parent('a').attr('href'));//圖鑑連結
 
-					 if ( !skstUtil.isEmpty(temp1) && !skstUtil.isEmpty(temp2) && !skstUtil.isEmpty(temp3) && !skstUtil.isEmpty(temp4))
+					 if (gamewithWebDTO.check())
 					 {
 							item2[index] = new Array();
-							item2[index][0]=temp1;
-							item2[index][1]=temp2;
-							item2[index][2]=temp3;
-							item2[index][3]=temp4;
-							item2[index][4]=temp5;
+							item2[index][0]=gamewithWebDTO.name;
+							item2[index][1]=gamewithWebDTO.stage;
+							item2[index][2]=gamewithWebDTO.picUrl;
+							item2[index][3]=gamewithWebDTO.stageUrl;
+							item2[index][4]=gamewithWebDTO.dataUrl;
 							index++;
 					 }
 					
@@ -909,21 +828,23 @@ function jpGamewithWeb() {
                 });
 				data2.each(function(i, elem){
 
-					var temp1=($(this).data('col1'));//名稱
-					var temp2=($(this).data('col2'));//關卡
-					var temp3=($(this).children('td').children('div').children('a').children('img').attr('src'));//圖片
-					var temp4=($(this).children("td").next().children("a").attr("href"));//關卡連結
-					var temp5=($(this).children("td").children("a").attr("href"));//圖鑑連結
+					let gamewithWebDTO = new GamewithWebDTO(
+						($(this).data('col1')),//名稱
+						($(this).data('col2')),//關卡
+						($(this).children('td').children('div').children('a').children('img').attr('src'))//圖片
+						($(this).children("td").next().children("a").attr("href")),//關卡連結
+						($(this).children("td").children("a").attr("href")),//圖鑑連結
+					);
 
 					
-					 if ( !skstUtil.isEmpty(temp1) && !skstUtil.isEmpty(temp2) && !skstUtil.isEmpty(temp3) && !skstUtil.isEmpty(temp4))
+					 if ( gamewithWebDTO.check())
 					 {
 							item[index2] = new Array();
-							item[index2][0]=temp1;
-							item[index2][1]=temp2;
-							item[index2][2]=temp3;
-							item[index2][3]=temp4;
-							item[index2][4]=temp5;
+							item[index2][0]=gamewithWebDTO.name;
+							item[index2][1]=gamewithWebDTO.stage;
+							item[index2][2]=gamewithWebDTO.picUrl;
+							item[index2][3]=gamewithWebDTO.stageUrl;
+							item[index2][4]=gamewithWebDTO.dataUrl;
 							index2++;
 					 }
 					
@@ -956,28 +877,8 @@ function jpGamewithWeb() {
 //=======gamertb=======
 
 
-/**
-*  表情符號
-*/
-function getNaploeonPic( number) {
-	//獸神化
-	if(number==0)return "https://imgur.com/QTijwU7.jpg"; 
-	//獸神化
-	if(number==1)return "https://imgur.com/CbTB9Ms.jpg"
-	if(number==2)return "https://imgur.com/e1eEXpC.jpg"
-};
 
-/**
-*圖片處理
-*/
-function lineReplyPicture(imageUrl) {
-	let messages = {
-		type: 'image',
-		originalContentUrl: imageUrl.replace("http", "https"),
-		previewImageUrl: imageUrl.replace("http", "https")
-	};
-	return messages;
- };
+
 
  /**
  *Google問卷處理
@@ -1021,11 +922,7 @@ function googleAnswerSet(answerArray,keyword){
 	return answerArray.filter(answers => (answers[1].indexOf(keyword)>=0) && (keyword.indexOf(answers[1])>=0));
   }
   
-   //尋找攻略相同關鍵字
-function findKeySet(data,keyword){
-	return data.filter(answers =>  skstUtil.strContain(answers[1],keyword) || skstUtil.strContain(answers[0],keyword));
-  }
-  
+
 
 
 

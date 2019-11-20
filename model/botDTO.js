@@ -15,6 +15,17 @@ function checkCommand (msg) {
 }
 
 /**
+ * 預設對話內容
+ */
+function getDefaultMsg(){
+    let ret="目前小拿看不懂喔><!";
+    return {
+        type:'text',
+        text:ret,
+    };
+}
+
+/**
  * 預設對話內容-Hello
  */
 function getDefaultMsgHello(){
@@ -96,10 +107,45 @@ function getDefaultMsgHelp(){
     return   msg;
 }
 
+/**
+ * 預設對話內容 :獸神
+ */
+function getDefaultMsgCustom01(){
+    let picNumber= Math.floor((Math.random() * 3));
+    let msg=[
+        {
+            type:'text',
+            text:"等很久了>///<"
+        },
+        {
+            type: 'image',
+            originalContentUrl: this.getSticker(picNumber),
+            previewImageUrl: this.getSticker(picNumber),
+        }
+    ]
+    return msg;
+}
+
+/**
+ *  表情符號
+ */
+function getSticker( number) {
+    if(number==0)return "https://imgur.com/QTijwU7.jpg";
+    if(number==1)return "https://imgur.com/CbTB9Ms.jpg"
+    if(number==2)return "https://imgur.com/e1eEXpC.jpg"
+};
+
+
 module.exports = {
     spellCommand: "小拿 ",
+    //-------------
     checkCommand:checkCommand,
+    getSticker:getSticker,
+    //-------------
+    getDefaultMsg:getDefaultMsg,
     getDefaultMsgHello:getDefaultMsgHello,
     getDefaultMsgTest:getDefaultMsgTest,
     getDefaultMsgHelp:getDefaultMsgHelp,
+    getDefaultMsgCustom01:getDefaultMsgCustom01,
+
 }
