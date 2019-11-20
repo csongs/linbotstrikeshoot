@@ -317,13 +317,13 @@ function handleEvent(event) {
       }
 
     case 'follow':
-         client.replyMessage(event.replyToken,getDefaultMsgHello());
+         client.replyMessage(event.replyToken,botModel.getDefaultMsgHello());
 
     case 'unfollow':
       return console.log(`Unfollowed this bot: ${JSON.stringify(event)}`);
 
     case 'join':
-	     client.replyMessage(event.replyToken,getDefaultMsgHello());
+	     client.replyMessage(event.replyToken,botModel.getDefaultMsgHello());
 
     case 'leave':
       return console.log(`Left: ${JSON.stringify(event)}`);
@@ -354,7 +354,7 @@ async function handleText(message, replyToken, source,userName) {
 	//}
 	
     //攻略url
-	let stageUrl= excuteMomstrikeUrlStatgeStr(message.text,source,userName);
+	let stageUrl= executeMonstrikeUrlStageStr(message.text,source,userName);
 	if(stageUrl!=null){
 		return   client.replyMessage(
 			replyToken,
@@ -373,19 +373,14 @@ async function handleText(message, replyToken, source,userName) {
 	}
 	
 	//如果是指令
-	else if(checkCommand( message.text)){
-
+	else if(botModel.checkCommand( message.text)){
 		let msg=message.text;
 		return   client.replyMessage(
 			replyToken,
-			excuteCommand(msg,source,userName)
+			executeCommand(msg,source,userName)
 		);
 	}
-	//GOOGLE問卷模式
-	/*
-	else if(usersGoogleMode[source.userId]==1){
-		replyText(replyToken,googleAsk(message.text,source,userName));
-	}*/
+
 	
 	else { //對話模式
 		return new Promise((resolve, reject) => {
@@ -692,23 +687,16 @@ app.listen(port, () => {
 //==============
 
 
-//確認是否為command
-var checkCommand = function( msg) {
-  if(msg.indexOf(botModel.spellCommand)==0){
-	return true;
-  }else{
-	  return false;
-  }
-};
+
 
 
 //攻略url
-function excuteMomstrikeUrlStatgeStr(inputMsg,source,userName){
-	 //攻略網址偵測
-	 let statgeStr=skstUtil.getMonstrikeUrlStageStr(inputMsg);
-	if(statgeStr!=null){
+function executeMonstrikeUrlStageStr(inputMsg,source,userName){
+	//攻略網址偵測
+	let stageStr=skstUtil.getMonstrikeUrlStageStr(inputMsg);
+	if(stageStr!=null){
 		//TODO 獨立成一個方法
-		let ansData=findKeySet(stageData,statgeStr);
+		let ansData=findKeySet(stageData,stageStr);
 		let msg = "";
 		if(ansData.length>0){
 				ansData=ansData.slice(0,5);
@@ -741,24 +729,12 @@ function excuteMomstrikeUrlStatgeStr(inputMsg,source,userName){
 }
 
  //觸發不同工作
-function excuteCommand ( msgCommand,source,userName){
+function executeCommand ( msgCommand,source,userName){
 	 let command = msgCommand.replace(botModel.spellCommand, '');//指令格式保留選項
-	 
-	 /* 先不讀台版攻略
-	if(isNumeric(command)){
-		var url=twGamertbWeb(command);
-		var commandUrl="怪物編號"+command+": "+url;
-		var msg={ 
-			type:'text',
-			text:commandUrl,
-		};
-		
-		return msg;
-	}else
-	*/
+
 	if(skstUtil.strContain(command,"獸神")){
-		var picNumber= Math.floor((Math.random() * 3));
-		var msg=[
+		let picNumber= Math.floor((Math.random() * 3));
+		let msg=[
 			{ 
 				type:'text',
 				text:"等很久了>///<"
@@ -772,49 +748,9 @@ function excuteCommand ( msgCommand,source,userName){
 		return msg;
 		
 	}else if(skstUtil.strContain(command,"測試")){
-		var msg=[
-			{ 
-				type:'text',
-				text:"1"
-			},
-			{
-				type:'text',
-				text:"2"
-			},
-			{
-				type:'text',
-				text:"3"
-			},
-			{
-				type:'text',
-				text:"4"
-			},
-			{
-				type:'text',
-				text:"最多只能5次QQ"
-			},
-			
-        ]
-		return msg;
+		return botModel.getDefaultMsgTest();
 	}else if(skstUtil.strContain(command,"help") || skstUtil.strContain(command,"教學")){ //教學目錄
-		 var msg=[
-					{
-						  type: 'template',
-						  altText: '已顯示教學內容',
-						  template: {
-							type: 'buttons',
-							thumbnailImageUrl: 'https://imgur.com/eSZ6TTu.jpg',
-							title: '我目前會...',
-							text: '指令教學',
-							actions: [
-							  { label: '幫你做決定~', type: 'message', text: '小拿 choice 可愛 超可愛' },
-							  { label: 'line邀請關卡連結來找攻略', type: 'message', text: 'モンストでマルチしない？\n「玉楼-暴威の鬼神、乱逆の咎（超絶）」' },
-							  { label: '看到特定文字回話', type: 'message', text: '小拿 學習 小拿好可愛 謝謝你>///<' }
-							]
-						  }
-					}
-				]
-		return   msg;
+		return  botModel.getDefaultMsgHelp();
 		
 	}else if(skstUtil.strContain(command,"學習 ")){
 		/*
@@ -827,8 +763,8 @@ function excuteCommand ( msgCommand,source,userName){
 		]
 		*/
 		command=command.replace("學習 ",'');
-		var items=command.split(/[\s+]/).filter(e=>e!=''); //選擇項目陣列
-		var msgText="學習指令規格不對喔!<p>範例: 小拿 學習 小拿好可愛 謝謝你>///<";
+		let items=command.split(/[\s+]/).filter(e=>e!=''); //選擇項目陣列
+		let msgText="學習指令規格不對喔!<p>範例: 小拿 學習 小拿好可愛 謝謝你>///<";
 		if(items.length>=2){
 			
 			appendMyRowV2(items[0],items[1],source.userId,userName);
@@ -918,32 +854,6 @@ function excuteCommand ( msgCommand,source,userName){
 	}
 }
 
-/**
-* 預設對話內容
-*/
-function getDefaultMsgHello(){
-	 let msg=[{
-			type:'text',
-			text:'你好~我是怪物彈珠BOT~我叫小拿!',
-			}, 
-			{
-					  type: 'template',
-					  altText: '請輸入「小拿 help」為你做教學',
-					  template: {
-						type: 'buttons',
-						text: '請按教學或輸入「小拿 help」',
-						 "actions": [
-						  {
-							"type": "message",
-							"label": "教學",
-							"text": "小拿 help"
-						  }
-						]
-					  },
-					},
-			]
-		return   msg;
-}
 
 /**
 * 網站部分
