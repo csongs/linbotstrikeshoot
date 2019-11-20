@@ -7,7 +7,6 @@
 const line = require('@line/bot-sdk'); // line sdk
 const express = require('express'); //web 需要的套件
 const cheerio = require("cheerio"); //爬蟲需要的套件
-const cjkConv = require("cjk-conv");//中日韓編碼轉換
 const google = require('googleapis');//google api
 const googleAuth = require('google-auth-library');//google auth
 
@@ -27,19 +26,19 @@ const isNumeric = require("isnumeric");
 
 //const settings = require('./settings');//客製化設定
 const skstUtil = require('./lib/skstUtil');
+const botModel = require('./model/botDTO');
 
 
 /**
  * 控制變數
  */
-var debug=false;
+const debug = false;
 //功略網相關
 var timer;//定期更新
 var stageData=[];  
 jpGamewithWeb();
 
-//回覆對話相關
-var Spell_Command ="小拿 ";
+
 
 
 
@@ -80,18 +79,24 @@ const client = new line.Client(config);
 const app = express();
 
 
-
-
 /**
-* GOOGLE API for 問答功能
-* 初版採取問卷表單模式做練習
-* TODO: 之後改成一行指令處理；問卷可以改採用教學
-*/
-  //底下輸入client_secret.json檔案的內容
-var myClientSecret={"installed":{"client_id":config.googleInstalledClientId,"project_id":"lithe-sonar-195513","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token",
-"auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":config.googleInstalledClientSecret,"redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}}
-var auth = new googleAuth();
-var oauth2Client = new auth.OAuth2(myClientSecret.installed.client_id,myClientSecret.installed.client_secret, myClientSecret.installed.redirect_uris[0]);
+ * GOOGLE API for 問答功能
+ * 初版採取問卷表單模式做練習
+ * TODO: 之後改成一行指令處理；問卷可以改採用教學
+ */
+const myClientSecret = {
+	"installed": {
+		"client_id": config.googleInstalledClientId,
+		"project_id": "lithe-sonar-195513",
+		"auth_uri": "https://accounts.google.com/o/oauth2/auth",
+		"token_uri": "https://accounts.google.com/o/oauth2/token",
+		"auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+		"client_secret": config.googleInstalledClientSecret,
+		"redirect_uris": ["urn:ietf:wg:oauth:2.0:oob", "http://localhost"]
+	}
+};
+const auth = new googleAuth();
+const oauth2Client = new auth.OAuth2(myClientSecret.installed.client_id, myClientSecret.installed.client_secret, myClientSecret.installed.redirect_uris[0]);
 
 //底下輸入sheetsapi.json檔案的內容
 oauth2Client.credentials ={"access_token":config.googleOauth2AccessToken,"refresh_token":config.googleOauth2RefreshToken,"token_type":"Bearer","expiry_date":1518881082672}
@@ -112,7 +117,7 @@ getQuestions();
 
 //讀取'問題'表單(固定對話)
 function getQuestions() {
-  var sheets = google.sheets('v4');
+  let sheets = google.sheets('v4');
   sheets.spreadsheets.values.get({
      auth: oauth2Client,
      spreadsheetId: mySheetId,
@@ -123,7 +128,7 @@ function getQuestions() {
         console.log('讀取問題檔的API產生問題：' + err);
         return;
      }
-     var rows = response.values;
+     let rows = response.values;
      if (rows.length == 0) {
         console.log('No data found.');
      } else {
@@ -138,8 +143,8 @@ function getQuestions() {
 //讀取'問卷'表單
 async function getAnswers() {
 	return new Promise((resolve, reject) => {
-		 if(debug)console.log("debug: start getAnswers");
-		var sheets = google.sheets('v4');
+		if(debug)console.log("debug: start getAnswers");
+		let sheets = google.sheets('v4');
 		sheets.spreadsheets.values.get({
 		 auth: oauth2Client,
 		 spreadsheetId: mySheetId,
@@ -206,7 +211,7 @@ function appendMyRowV2(question,answer,userId,userName) {
         ]
       }
    };
-   var sheets = google.sheets('v4');
+   let sheets = google.sheets('v4');
    sheets.spreadsheets.values.append(request, function(err, response) {
       if (err) {
          console.log('The API returned an error: ' + err);
@@ -262,7 +267,7 @@ function handleEvent(event) {
       const message = event.message;
       switch (message.type) {
         case 'text':
-		if(event.source.type=='group' ){
+		if(event.source.type==='group' ){
 			  console.log("groupId: "+event.source.groupId);
 			  console.log("userId: "+event.source.userId);
 			   console.log("userName: "+client.getGroupMemberProfile(event.source.groupId,event.source.userId).displayName);
@@ -272,7 +277,7 @@ function handleEvent(event) {
 			message, event.replyToken, event.source,group.displayName)
             
           );
-		}else if(event.source.type=='room'){
+		}else if(event.source.type==='room'){
 			 console.log("roomId: "+event.source.roomId);
 			  console.log("userId: "+event.source.userId);
 			   console.log("userName: "+client.getGroupMemberProfile(event.source.groupId,event.source.userId).displayName);
@@ -349,28 +354,28 @@ async function handleText(message, replyToken, source,userName) {
 	//}
 	
     //攻略url
-	var statgeUrl= excuteMomstrikeUrlStatgeStr(message.text,source,userName);
-	if(statgeUrl!=null){
+	let stageUrl= excuteMomstrikeUrlStatgeStr(message.text,source,userName);
+	if(stageUrl!=null){
 		return   client.replyMessage(
 			replyToken,
-			statgeUrl
+			stageUrl
 		);
 	}
 	
 	//玩選擇遊戲
 	else if(skstUtil.isPlayChoice(message.text)){
-		var str = message.text.replace(/[\s\S]+choice/g, '');//指令格式保留選項
-		var items=str.split(/[\s+,+]/).filter(e=>e!='') //選擇項目陣列
-		var item=items[Math.floor(Math.random()*(items.length))] //隨機選一個項目
-		var msg=userName+": "+message.text+"->"+item; // 回答內容
+		let str = message.text.replace(/[\s\S]+choice/g, '');//指令格式保留選項
+		let items=str.split(/[\s+,+]/).filter(e=>e!='') //選擇項目陣列
+		let item=items[Math.floor(Math.random()*(items.length))] //隨機選一個項目
+		let msg=userName+": "+message.text+"->"+item; // 回答內容
 		
-		replyText(replyToken,msg);
+		await replyText(replyToken, msg);
 	}
 	
 	//如果是指令
 	else if(checkCommand( message.text)){
 
-		var msg=message.text;
+		let msg=message.text;
 		return   client.replyMessage(
 			replyToken,
 			excuteCommand(msg,source,userName)
@@ -393,7 +398,7 @@ async function handleText(message, replyToken, source,userName) {
 					 var x = Math.floor((Math.random() * answersSet.length));
 					 ret=answersSet[x][2];
 					  //console.log(ret) ;
-					replyText(replyToken,ret);//ret不能為空
+					await replyText(replyToken, ret);//ret不能為空
 				}
 				
 					
@@ -689,31 +694,25 @@ app.listen(port, () => {
 
 //確認是否為command
 var checkCommand = function( msg) {
-  if(msg.indexOf(Spell_Command)==0){
+  if(msg.indexOf(botModel.spellCommand)==0){
 	return true;
   }else{
 	  return false;
   }
 };
 
-//獲得指令參數(去除 Spell_Command)
-var getCommandParameter = function( msgCommand){
-	var ret = msgCommand.replace(Spell_Command, '');//指令格式保留選項
-	//var ret=msgCommand.substring(1);
-	return ret;
-}
 
 //攻略url
-var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
+function excuteMomstrikeUrlStatgeStr(inputMsg,source,userName){
 	 //攻略網址偵測
-	 var statgeStr=getMomstrikeUrlStatgeStr(inputMsg);
+	 let statgeStr=skstUtil.getMonstrikeUrlStageStr(inputMsg);
 	if(statgeStr!=null){
 		//TODO 獨立成一個方法
-		var ansData=findKeySet(stageData,statgeStr);
-			var msg="";
-			if(ansData.length>0){
+		let ansData=findKeySet(stageData,statgeStr);
+		let msg = "";
+		if(ansData.length>0){
 				ansData=ansData.slice(0,5);
-				var body=  ansData.map((data) => ({ 
+				let body=  ansData.map((data) => ({
 								thumbnailImageUrl: data[2],
 								title: data[0],
 								text: data[1],
@@ -742,8 +741,8 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 }
 
  //觸發不同工作
- var excuteCommand = function( msgCommand,source,userName){
-	 var command=getCommandParameter(msgCommand);
+function excuteCommand ( msgCommand,source,userName){
+	 let command = msgCommand.replace(botModel.spellCommand, '');//指令格式保留選項
 	 
 	 /* 先不讀台版攻略
 	if(isNumeric(command)){
@@ -757,7 +756,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 		return msg;
 	}else
 	*/
-	if(strCompare(command,"獸神")){
+	if(skstUtil.strContain(command,"獸神")){
 		var picNumber= Math.floor((Math.random() * 3));
 		var msg=[
 			{ 
@@ -772,7 +771,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
         ]
 		return msg;
 		
-	}else if(strCompare(command,"測試")){
+	}else if(skstUtil.strContain(command,"測試")){
 		var msg=[
 			{ 
 				type:'text',
@@ -797,7 +796,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 			
         ]
 		return msg;
-	}else if(strCompare(command,"help") || strCompare(command,"教學")){ //教學目錄
+	}else if(skstUtil.strContain(command,"help") || skstUtil.strContain(command,"教學")){ //教學目錄
 		 var msg=[
 					{
 						  type: 'template',
@@ -817,7 +816,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 				]
 		return   msg;
 		
-	}else if(strCompare(command,"學習 ")){
+	}else if(skstUtil.strContain(command,"學習 ")){
 		/*
 		usersGoogleMode[source.userId]=1;
 		var msg=[	
@@ -842,7 +841,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 			},
 		]
 		return msg;
-	}else if(strCompare(command,"攻略")){
+	}else if(skstUtil.strContain(command,"攻略")){
 		var rawData;
 		var excelData;
 
@@ -923,7 +922,7 @@ var excuteMomstrikeUrlStatgeStr=function(inputMsg,source,userName){
 * 預設對話內容
 */
 function getDefaultMsgHello(){
-	 var msg=[{ 
+	 let msg=[{
 			type:'text',
 			text:'你好~我是怪物彈珠BOT~我叫小拿!',
 			}, 
@@ -1046,10 +1045,6 @@ function jpGamewithWeb() {
 
 //=======gamertb=======
 
-//回傳怪物編號網址
-var twGamertbWeb = function( number) {
-  return "http://www.gamertb.com/ms/m"+number;
-};
 
 /**
 *  表情符號
@@ -1066,10 +1061,11 @@ function getNaploeonPic( number) {
 *圖片處理
 */
 function lineReplyPicture(imageUrl) {
-	var messages= { type  : 'image',
-                    originalContentUrl:  imageUrl.replace("http", "https"),
-                    previewImageUrl:  imageUrl.replace("http", "https")
-	}
+	let messages = {
+		type: 'image',
+		originalContentUrl: imageUrl.replace("http", "https"),
+		previewImageUrl: imageUrl.replace("http", "https")
+	};
 	return messages;
  };
 
@@ -1117,39 +1113,11 @@ function googleAnswerSet(answerArray,keyword){
   
    //尋找攻略相同關鍵字
 function findKeySet(data,keyword){
-	return data.filter(answers =>  strCompare(answers[1],keyword) || strCompare(answers[0],keyword));
+	return data.filter(answers =>  skstUtil.strContain(answers[1],keyword) || skstUtil.strContain(answers[0],keyword));
   }
   
-  //偵測攻略網址
-function getMomstrikeUrlStatgeStr (str){
-	 //去掉換行
-	 str = str.replace(/(\r\n\t|\n|\r\t)/gm,"");
-	//正規表示法
-	var re=/(モンストでマルチしない？「)(.*-)?(.*)(（.*)/; 
-	
-	var ret=null;
-	if(str.match(re)!=null){ret= str.match(re)[3];}
-	 console.log('getMomstrikeUrlStatgeStr:'+ret);
-	return ret;
-  }
 
 
-
-
-/**
-* util
-*/
-
-function strCompare(a,b){
-	a=a.replace('・','');
-	b=b.replace('・','');
-	return (cjk(a).indexOf(cjk(b))>=0);
-}
-
-//中日韓編碼轉換
-function cjk(t){
-	return cjkConv.jpConvert['cjk2zht'](t);
-}
 
 // debug使用
 process.on('unhandledRejection', (reason, promise) => {
