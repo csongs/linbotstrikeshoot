@@ -33,8 +33,9 @@
 
 - 利用`怪物彈珠app`內建line共鬥功能；把邀請貼到BOT看的到地方
 - 目前僅支援一般降臨/爆絕/超絕/轟絕 (不支援玉樓/霸塔/神殿)
+ <img src="doc/img/help4-2.jpg"  width="250" >
 
-<img src="doc/img/help4-1.jpg"  width="250" > <img src="doc/img/help4-2.jpg"  width="250" >
+<img src="doc/img/help4-1.jpg"  width="250" >
 
 ## 學習模式
 輸入 `小拿 學習 {偵測的文字} {回應的文字}`
