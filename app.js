@@ -367,7 +367,7 @@ async function handleText(message, replyToken, source,userName) {
 		);
 	}
 	//圖片指令
-	else if(".image".indexOf(message.text)==0){
+	else if(skstUtil.isImageCmd(message.text)){
 		 rply.text = await googleimage(message.text,".image", "high")
 		 rply.type = 'image'
 		  return client.replyMessage(replyToken,rply);
