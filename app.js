@@ -366,6 +366,12 @@ async function handleText(message, replyToken, source,userName) {
 			stageUrl
 		);
 	}
+	//圖片指令
+	else if(".image".indexOf(message.text)==0){
+		 rply.text = await googleimage(message.text,".image", "high")
+		 rply.type = 'image'
+		  return client.replyMessage(replyToken,rply);
+	}
 	
 	//玩選擇遊戲
 	else if(skstUtil.isPlayChoice(message.text)){
@@ -386,12 +392,7 @@ async function handleText(message, replyToken, source,userName) {
 		);
 	}
 	
-	//圖片指令
-	else if(".image".indexOf(message.text)==0){
-		 rply.text = await googleimage(message.text,".image", "high")
-		 rply.type = 'image'
-		  return client.replyMessage(replyToken,rply);
-	}
+	
 	else { //對話模式
 		return new Promise((resolve, reject) => {
 			getAnswers().then(async client => {
