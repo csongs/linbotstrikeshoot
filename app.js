@@ -944,15 +944,15 @@ function googleAnswerSet(answerArray,keyword){
   }
   
 
-function dice(diceSided) {
+async function dice(diceSided) {
     let result = '';
     result = Math.floor((Math.random() * diceSided) + 1)
     return result
 }
 
-function diceINT(start, end) {
+async function diceINT(start, end) {
     let result = '';
-    result = Math.floor((Math.random() * diceSided) + 1)
+    result = Math.floor((Math.random() * end-start) + start)
     return result
 }
 
