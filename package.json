@@ -21,6 +21,7 @@
     "isnumeric": "^0.3.2",
     "jquery": "^3.4.0",
     "nodemailer": "^4.4.1",
+	"google-images": "^2.1.0",
     "request": "^2.83.0"
   },
   "devDependencies": {

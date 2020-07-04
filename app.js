@@ -1,7 +1,11 @@
 ﻿/**
  * Module dependencies.
  */
-
+var rply = {
+	default: 'on',
+	type: 'text',
+	text: ''
+}; //type是必需的,但可以更改
 
 
 const line = require('@line/bot-sdk'); // line sdk
@@ -20,7 +24,7 @@ const request = require("request");
 
 
 const async = require('async');
-
+const GoogleImages = require('google-images');
 const isNumeric = require("isnumeric");
 
 
@@ -381,8 +385,13 @@ async function handleText(message, replyToken, source,userName) {
 			executeCommand(msg,source,userName)
 		);
 	}
-
 	
+	//圖片指令
+	else if(".image".indexOf(message.text)==0){
+		 rply.text = await googleimage(message.text,".image", "high")
+		 rply.type = 'image'
+		  return client.replyMessage(replyToken,rply);
+	}
 	else { //對話模式
 		return new Promise((resolve, reject) => {
 			getAnswers().then(async client => {
@@ -715,7 +724,7 @@ function executeMonstrikeUrlStageStr(inputMsg,source,userName){
 				//line回話
 				 msg=[{
 						  type: 'template',
-						  altText: '此指令無法顯示><',
+						  altText: '已顯示訊息=)',
 						  template: {
 							type: 'carousel',
 							columns:body,
@@ -795,8 +804,7 @@ function jpGamewithWeb() {
 				var item=[];
 				var item2=[];
 				//console.log("data:"+data);
-				var index=0;
-				var index2=0;
+
 				$("tr").has('data-col3')
 				//第一種規則
 				$(".js-lazyload-fixed-size-img.c-blank-img.w-article-img").each(function(i, elem){
@@ -811,18 +819,11 @@ function jpGamewithWeb() {
 
 					 if (gamewithWebDTO.check())
 					 {
-							item2[index] = new Array();
-							item2[index][0]=gamewithWebDTO.name;
-							item2[index][1]=gamewithWebDTO.stage;
-							item2[index][2]=gamewithWebDTO.picUrl;
-							item2[index][3]=gamewithWebDTO.stageUrl;
-							item2[index][4]=gamewithWebDTO.dataUrl;
-							index++;
+						 item.push(gamewithWebDTO);
 					 }
 					
 				});
 				//第二種規則
-				index2=0;
 				var data2 = $("tr").filter(function(){
                    return $(this).attr('data-col1') !==undefined
                 });
@@ -839,13 +840,7 @@ function jpGamewithWeb() {
 					
 					 if ( gamewithWebDTO.check())
 					 {
-							item[index2] = new Array();
-							item[index2][0]=gamewithWebDTO.name;
-							item[index2][1]=gamewithWebDTO.stage;
-							item[index2][2]=gamewithWebDTO.picUrl;
-							item[index2][3]=gamewithWebDTO.stageUrl;
-							item[index2][4]=gamewithWebDTO.dataUrl;
-							index2++;
+						 item.push(gamewithWebDTO);
 					 }
 					
 				});
@@ -877,6 +872,31 @@ function jpGamewithWeb() {
 //=======gamertb=======
 
 
+// 圖片
+async function googleimage(inputStr, mainMsg, safe) {
+	let keyword = inputStr.replace(mainMsg[0] + " ", "")
+	//let page = Math.floor((Math.random() * (10)) * 10) + 1;
+	let page = diceINT(0, 91)
+	if (mainMsg[1].match(/^yesno$/i)) {
+		//隨機YES NO
+		let A = ['yes', 'no']
+		keyword = A[dice(A.length) - 1] + " GIF";
+	}
+	return await client.search(keyword, {
+			"safe": safe,
+			"page": page
+		})
+		.then(async images => {
+			if (images[0]) {
+				//let resultnum = Math.floor((Math.random() * (images.length)) + 0)
+				let resultnum = dice(images.length - 1)
+				return images[resultnum].url;
+			}
+
+		}).catch(err => {
+			console.log(err)
+		})
+}
 
 
 
@@ -923,7 +943,17 @@ function googleAnswerSet(answerArray,keyword){
   }
   
 
+function dice(diceSided) {
+    let result = '';
+    result = Math.floor((Math.random() * diceSided) + 1)
+    return result
+}
 
+function diceINT(start, end) {
+    let result = '';
+    result = Math.floor((Math.random() * diceSided) + 1)
+    return result
+}
 
 
 // debug使用
