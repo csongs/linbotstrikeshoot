@@ -878,12 +878,8 @@ function jpGamewithWeb() {
 async function googleimage(inputStr, mainMsg, safe) {
 	let keyword = inputStr.replace(mainMsg[0] + " ", "")
 	//let page = Math.floor((Math.random() * (10)) * 10) + 1;
-	let page = diceINT(0, 91)
-	if (mainMsg[1].match(/^yesno$/i)) {
-		//隨機YES NO
-		let A = ['yes', 'no']
-		keyword = A[dice(A.length) - 1] + " GIF";
-	}
+	let page = diceINT(1, 91)
+	console.log("page:"+page)
 	return await googleImgClient.search(keyword, {
 			"safe": safe,
 			"page": page
