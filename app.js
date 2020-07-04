@@ -13,7 +13,8 @@ const express = require('express'); //web 需要的套件
 const cheerio = require("cheerio"); //爬蟲需要的套件
 const google = require('googleapis');//google api
 const googleAuth = require('google-auth-library');//google auth
-const googleImgClient = new GoogleImages(process.env.CSE_ID, process.env.CSE_API_KEY);
+const GoogleImages = require('google-images');
+
 
 const fs = require('fs');
 const path = require('path');
@@ -24,7 +25,7 @@ const request = require("request");
 
 
 const async = require('async');
-const GoogleImages = require('google-images');
+
 const isNumeric = require("isnumeric");
 
 
@@ -43,7 +44,7 @@ var timer;//定期更新
 var stageData=[];  
 jpGamewithWeb();
 
-
+const googleImgClient = new GoogleImages(process.env.CSE_ID, process.env.CSE_API_KEY);
 
 
 
