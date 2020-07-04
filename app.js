@@ -878,7 +878,7 @@ function jpGamewithWeb() {
 async function googleimage(inputStr, mainMsg, safe) {
 	let keyword = inputStr.replace(mainMsg[0] + " ", "")
 	//let page = Math.floor((Math.random() * (10)) * 10) + 1;
-	let page = diceINT(1, 91)
+	let page = await diceINT(1, 91)
 	console.log("page:"+page)
 	return await googleImgClient.search(keyword, {
 			"safe": safe,
@@ -887,7 +887,7 @@ async function googleimage(inputStr, mainMsg, safe) {
 		.then(async images => {
 			if (images[0]) {
 				//let resultnum = Math.floor((Math.random() * (images.length)) + 0)
-				let resultnum = dice(images.length - 1)
+				let resultnum = await dice(images.length - 1)
 				return images[resultnum].url;
 			}
 
