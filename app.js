@@ -1,11 +1,7 @@
 ﻿/**
  * Module dependencies.
  */
-var rply = {
-	default: 'on',
-	type: 'text',
-	text: ''
-}; //type是必需的,但可以更改
+
 
 
 const line = require('@line/bot-sdk'); // line sdk
@@ -369,9 +365,13 @@ async function handleText(message, replyToken, source,userName) {
 	}
 	//圖片指令
 	else if(skstUtil.isImageCmd(message.text)){
-		 rply.text = await googleimage(message.text,".image", "high")
-		 rply.type = 'image'
-		  return client.replyMessage(replyToken,rply);
+		 var ret = await googleimage(message.text,".image", "high")
+		 console.log("image:"+ret);
+		 return client.replyMessage(replyToken,{
+          type: 'image',
+          originalContentUrl:ret,
+          previewImageUrl: ret,
+        });
 	}
 	
 	//玩選擇遊戲
@@ -890,6 +890,7 @@ async function googleimage(inputStr, mainMsg, safe) {
 			if (images[0]) {
 				//let resultnum = Math.floor((Math.random() * (images.length)) + 0)
 				let resultnum = Math.floor((Math.random() * (images.length - 1)) + 1)
+				console.log("resultnum:"+resultnum)
 				return images[resultnum].url;
 			}
 
@@ -943,17 +944,6 @@ function googleAnswerSet(answerArray,keyword){
   }
   
 
-async function dice(diceSided) {
-    let result = '';
-    result = Math.floor((Math.random() * diceSided) + 1)
-    return result
-}
-
-async function diceINT(start, end) {
-    let result = '';
-    result = Math.floor((Math.random() * end-start) + start)
-    return result
-}
 
 
 // debug使用
