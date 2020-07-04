@@ -879,7 +879,7 @@ async function googleimage(inputStr, mainMsg, safe) {
 	let keyword = inputStr.replace(mainMsg[0] + " ", "")
 	//let page = Math.floor((Math.random() * (10)) * 10) + 1;
 	let start=1
-	let end=91
+	let end=10
 	let page = Math.floor((Math.random() * end-start) + start)
 	console.log("page:"+page)
 	return await googleImgClient.search(keyword, {
