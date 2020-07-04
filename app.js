@@ -13,7 +13,7 @@ const express = require('express'); //web 需要的套件
 const cheerio = require("cheerio"); //爬蟲需要的套件
 const google = require('googleapis');//google api
 const googleAuth = require('google-auth-library');//google auth
-
+const googleImgClient = new GoogleImages(process.env.CSE_ID, process.env.CSE_API_KEY);
 
 const fs = require('fs');
 const path = require('path');
@@ -883,7 +883,7 @@ async function googleimage(inputStr, mainMsg, safe) {
 		let A = ['yes', 'no']
 		keyword = A[dice(A.length) - 1] + " GIF";
 	}
-	return await client.search(keyword, {
+	return await googleImgClient.search(keyword, {
 			"safe": safe,
 			"page": page
 		})
