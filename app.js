@@ -9,7 +9,7 @@ const express = require('express'); //web 需要的套件
 const cheerio = require("cheerio"); //爬蟲需要的套件
 const google = require('googleapis');//google api
 const googleAuth = require('google-auth-library');//google auth
-const GoogleImages = require('./lib/google-images');
+const GoogleImages = require('google-images');
 
 
 const fs = require('fs');
@@ -878,13 +878,14 @@ function jpGamewithWeb() {
 
 // 圖片
 async function googleimage(inputStr, mainMsg, safe) {
-	let keyword = inputStr.replace(mainMsg[0] + " ", "")
+	let keyword = inputStr.replace(mainMsg + " ", "")
 	//let page = Math.floor((Math.random() * (10)) * 10) + 1;
 	let start=1
 	let end=1
 	//let page = Math.floor((Math.random() * end-start) + start)
 	let page = 1
 	console.log("page:"+page)
+	console.log("keyword:"+keyword)
 	return await googleImgClient.search(keyword, {
 			"safe": safe,
 			"page": page
