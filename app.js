@@ -890,6 +890,7 @@ async function googleimage(inputStr, mainMsg, safe) {
 		.then(async images => {
 			if (images[0]) {
 				//let resultnum = Math.floor((Math.random() * (images.length)) + 0)
+				console.log("images:"+images)
 				var imagesItem = images.find(function(item, index, array){
 				  return isImage(item.url);          
 				});
