@@ -881,64 +881,25 @@ async function googleimage(inputStr, mainMsg, safe) {
 	let keyword = inputStr.replace(mainMsg[0] + " ", "")
 	//let page = Math.floor((Math.random() * (10)) * 10) + 1;
 	let start=1
-	let end=3
-	let page = Math.floor((Math.random() * end-start) + start)
-	//let page = 1
+	let end=1
+	//let page = Math.floor((Math.random() * end-start) + start)
+	let page = 1
 	console.log("page:"+page)
-	console.log("keyword:"+keyword)
-	return await getImage(keyword,page).then(async images => {
+	return await googleImgClient.search(keyword, {
+			"safe": safe,
+			"page": page
+		})
+		.then(async images => {
 			if (images[0]) {
 				//let resultnum = Math.floor((Math.random() * (images.length)) + 0)
-
-				var imagesItem = images.filter(item => isImage(item.url));
-					
-				 
-				let resultnum = Math.floor((Math.random() * (imagesItem.length - 1)) + 1)
-				console.log("images.length:"+imagesItem.length)
+				let resultnum = Math.floor((Math.random() * (images.length - 1)) + 1)
 				console.log("resultnum:"+resultnum)
-				return imagesItem[resultnum].url;
+				return images[resultnum].url;
 			}
 
 		}).catch(err => {
 			console.log(err)
-		});
-		
-}
-async function getImage(keyword,page){
-	var imageUrl="https://www.googleapis.com/customsearch/v1?cx="+config.cseId+"&key="+config.cseApiKey+"&q="+keyword+"&searchType=image&page="+page
-
-	return new Promise((resolve, reject) => {
-		request({
-			url: imageUrl,
-			method:'get'
-		},(err,res)=>{
-			if (err){
-				console.log(err) ;
-				reject(err);
-				//return ;
-			}else if(res && res.statusCode === 200){
-				const items = res.body.items || [];
-				console.log("items:"+items)
-				var list= items.map(item => ({
-					type: item.mime,
-					width: item.image.width,
-					height: item.image.height,
-					size: item.image.byteSize,
-					url: item.link,
-					thumbnail: {
-						url: item.image.thumbnailLink,
-						width: item.image.thumbnailWidth,
-						height: item.image.thumbnailHeight
-					},
-					description: item.snippet,
-					parentPage: item.image.contextLink
-				}));
-				console.log("list:"+list) ;
-				resolve(list);
-			};
-		
-		});
-	})
+		})
 }
 
  /**
