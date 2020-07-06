@@ -884,7 +884,6 @@ async function googleimage(inputStr, mainMsg, safe) {
 	//let page = 1
 	console.log("page:"+page)
 	return await googleImgClient.search(keyword, {
-			"safe": safe,
 			"page": page
 		})
 		.then(async images => {
