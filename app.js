@@ -66,8 +66,10 @@ const config = {
   googleOauth2AccessToken:process.env.GoogleOauth2AccessToken,
   googleOauth2RefreshToken:process.env.GoogleOauth2RefreshToken,
    //google sheet
-  googleSheetId:process.env.GoogleSheetId
+  googleSheetId:process.env.GoogleSheetId,
   
+  cseId:process.env.CSE_ID,
+  cseApiKey:process.env.CSE_API_KEY
   }
 
 /**
@@ -903,7 +905,7 @@ async function googleimage(inputStr, mainMsg, safe) {
 		
 }
 async function getImage(keyword,page){
-	var imageUrl="https://www.googleapis.com/customsearch/v1?cx="+process.env.CSE_ID+"&key="process.env.CSE_API_KEY+"&q="+keyword+"&searchType=image&page="+page
+	var imageUrl="https://www.googleapis.com/customsearch/v1?cx="+config.cseId+"&key="config.cseApiKey+"&q="+keyword+"&searchType=image&page="+page
 
 	return  new Promise((resolve, reject) => {
 		request({
