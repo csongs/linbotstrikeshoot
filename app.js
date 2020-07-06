@@ -23,7 +23,7 @@ const request = require("request");
 const async = require('async');
 
 const isNumeric = require("isnumeric");
-
+const isImage = require('is-image');
 
 //const settings = require('./settings');//客製化設定
 const skstUtil = require('./lib/skstUtil');
@@ -66,8 +66,10 @@ const config = {
   googleOauth2AccessToken:process.env.GoogleOauth2AccessToken,
   googleOauth2RefreshToken:process.env.GoogleOauth2RefreshToken,
    //google sheet
-  googleSheetId:process.env.GoogleSheetId
+  googleSheetId:process.env.GoogleSheetId,
   
+  cseId:process.env.CSE_ID,
+  cseApiKey:process.env.CSE_API_KEY
   }
 
 /**
@@ -876,13 +878,14 @@ function jpGamewithWeb() {
 
 // 圖片
 async function googleimage(inputStr, mainMsg, safe) {
-	let keyword = inputStr.replace(mainMsg[0] + " ", "")
+	let keyword = inputStr.replace(mainMsg + " ", "")
 	//let page = Math.floor((Math.random() * (10)) * 10) + 1;
 	let start=1
 	let end=1
 	//let page = Math.floor((Math.random() * end-start) + start)
 	let page = 1
 	console.log("page:"+page)
+	console.log("keyword:"+keyword)
 	return await googleImgClient.search(keyword, {
 			"safe": safe,
 			"page": page
@@ -899,8 +902,6 @@ async function googleimage(inputStr, mainMsg, safe) {
 			console.log(err)
 		})
 }
-
-
 
  /**
  *Google問卷處理
