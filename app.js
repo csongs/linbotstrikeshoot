@@ -891,9 +891,9 @@ async function googleimage(inputStr, mainMsg, safe) {
 			if (images[0]) {
 				//let resultnum = Math.floor((Math.random() * (images.length)) + 0)
 				console.log("images:"+images)
-				var imagesItem = images.find(function(item, index, array){
-				  return isImage(item.url);          
-				});
+				var imagesItem = images.filter(item => isImage(item.url));
+					
+				 
 				let resultnum = Math.floor((Math.random() * (imagesItem.length - 1)) + 1)
 				console.log("images.length:"+imagesItem.length)
 				console.log("resultnum:"+resultnum)
