@@ -905,9 +905,9 @@ async function googleimage(inputStr, mainMsg, safe) {
 		
 }
 async function getImage(keyword,page){
-	var imageUrl="https://www.googleapis.com/customsearch/v1?cx="+config.cseId+"&key="config.cseApiKey+"&q="+keyword+"&searchType=image&page="+page
+	var imageUrl="https://www.googleapis.com/customsearch/v1?cx="+config.cseId+"&key="+config.cseApiKey+"&q="+keyword+"&searchType=image&page="+page
 
-	return  new Promise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		request({
 			url: imageUrl,
 			method:'get'
@@ -935,8 +935,11 @@ async function getImage(keyword,page){
 				}));
 				console.log("list:"+list) ;
 				resolve(list);
-			});
-	});
+			};
+		
+		});
+	})
+}
 
  /**
  *Google問卷處理
