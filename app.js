@@ -369,11 +369,16 @@ async function handleText(message, replyToken, source,userName) {
 	else if(skstUtil.isImageCmd(message.text)){
 		 var ret = await googleimage(message.text,".image", "high")
 		 console.log("image:"+ret);
-		 return client.replyMessage(replyToken,{
-          type: 'image',
-          originalContentUrl:ret,
-          previewImageUrl: ret,
-        });
+		 if(ret==429){
+			 return replyText(replyToken,"查詢額度已用完QQ");
+		 }else{
+			return client.replyMessage(replyToken,{
+			  type: 'image',
+			  originalContentUrl:ret,
+			  previewImageUrl: ret,
+			}); 
+		 }
+		 
 	}
 	
 	//玩選擇遊戲
@@ -900,6 +905,9 @@ async function googleimage(inputStr, mainMsg, safe) {
 			}
 
 		}).catch(err => {
+			if(err.statusCode==429){
+				return 429;
+			}
 			console.log(err)
 		})
 }
