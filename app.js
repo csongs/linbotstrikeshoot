@@ -23,7 +23,7 @@ const request = require("request");
 const async = require('async');
 
 const isNumeric = require("isnumeric");
-
+const isImage = require('is-image');
 
 //const settings = require('./settings');//客製化設定
 const skstUtil = require('./lib/skstUtil');
@@ -879,9 +879,9 @@ async function googleimage(inputStr, mainMsg, safe) {
 	let keyword = inputStr.replace(mainMsg[0] + " ", "")
 	//let page = Math.floor((Math.random() * (10)) * 10) + 1;
 	let start=1
-	let end=1
-	//let page = Math.floor((Math.random() * end-start) + start)
-	let page = 1
+	let end=3
+	let page = Math.floor((Math.random() * end-start) + start)
+	//let page = 1
 	console.log("page:"+page)
 	return await googleImgClient.search(keyword, {
 			"safe": safe,
@@ -890,9 +890,13 @@ async function googleimage(inputStr, mainMsg, safe) {
 		.then(async images => {
 			if (images[0]) {
 				//let resultnum = Math.floor((Math.random() * (images.length)) + 0)
-				let resultnum = Math.floor((Math.random() * (images.length - 1)) + 1)
+				var imagesItem = images.find(function(item, index, array){
+				  return isImage(item.url);          
+				});
+				let resultnum = Math.floor((Math.random() * (imagesItem.length - 1)) + 1)
+				console.log("images.length:"+imagesItem.length)
 				console.log("resultnum:"+resultnum)
-				return images[resultnum].url;
+				return imagesItem[resultnum].url;
 			}
 
 		}).catch(err => {
