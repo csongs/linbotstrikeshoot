@@ -9,7 +9,7 @@ const express = require('express'); //web 需要的套件
 const cheerio = require("cheerio"); //爬蟲需要的套件
 const google = require('googleapis');//google api
 const googleAuth = require('google-auth-library');//google auth
-const GoogleImages = require('google-images');
+const GoogleImages = require('./lib/google-images');
 
 
 const fs = require('fs');
