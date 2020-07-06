@@ -881,7 +881,7 @@ async function googleimage(inputStr, mainMsg, safe) {
 	let keyword = inputStr.replace(mainMsg + " ", "")
 	//let page = Math.floor((Math.random() * (10)) * 10) + 1;
 	let start=1
-	let end=1
+	let end=5
 	//let page = Math.floor((Math.random() * end-start) + start)
 	let page = 1
 	console.log("page:"+page)
@@ -893,14 +893,19 @@ async function googleimage(inputStr, mainMsg, safe) {
 		.then(async images => {
 			if (images[0]) {
 				//let resultnum = Math.floor((Math.random() * (images.length)) + 0)
-				let resultnum = Math.floor((Math.random() * (images.length - 1)) + 1)
+				var imagesItem = images.filter(item => isImage(item.url)&& !imageFailUrl(item.url) );
+				let resultnum = Math.floor((Math.random() * (imagesItem.length - 1)) + 1)
 				console.log("resultnum:"+resultnum)
-				return images[resultnum].url;
+				return imagesItem[resultnum].url;
 			}
 
 		}).catch(err => {
 			console.log(err)
 		})
+}
+
+function imageFailUrl(url){
+	return skstUtil.strContain(url,"http://pic.pimg.tw")
 }
 
  /**
