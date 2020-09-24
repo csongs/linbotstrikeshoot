@@ -1,5 +1,5 @@
 
-class gamewithWebDTO {
+class GamewithWebDTO {
     constructor(name, stage,picUrl,stageUrl,dataUrl) {
 
         this.name = name; //名稱
@@ -25,4 +25,4 @@ class gamewithWebDTO {
 
 
 
-module.exports = gamewithWebDTO;
+module.exports = GamewithWebDTO;

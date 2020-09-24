@@ -27,8 +27,8 @@ const isImage = require('is-image');
 
 //const settings = require('./settings');//客製化設定
 const skstUtil = require('./lib/skstUtil');
-const botModel = require('./model/botDTO');
-var GamewithWebDTO = require("./model/gamewithWebDTO");
+const botModel = require('./model/BotDTO');
+var GamewithWebDTO = require("./model/GamewithWebDTO");
 
 
 /**
@@ -832,6 +832,7 @@ function jpGamewithWeb() {
 
 					 if (gamewithWebDTO.check())
 					 {
+						 //console.log(gamewithWebDTO)
 						 item.push(gamewithWebDTO);
 					 }
 					
@@ -853,10 +854,12 @@ function jpGamewithWeb() {
 					
 					 if ( gamewithWebDTO.check())
 					 {
+						 //console.log(gamewithWebDTO)
 						 item.push(gamewithWebDTO);
 					 }
 					
 				});
+				
 				//合併
 				for (var i = 0; i < item.length; i ++) {
 					//去掉重複
@@ -870,8 +873,14 @@ function jpGamewithWeb() {
 				//callback( undefined,item);
 				//先暫存為global變數
 				stageData=item;
-				resolve(item);
+				
+				resolve(stageData);
+				//console.log(stageData)
+				//skstUtil.writeFile('./stage.txt',JSON.stringify(stageData));
+				let ansData=skstUtil.selectKeySet(stageData,"暴威の鬼神、乱逆の");
+				console.log(ansData);
 				console.log('攻略資料更新完畢!目前共'+stageData.length+'筆');
+				
 			}
 			
 			
