@@ -898,8 +898,8 @@ function jpGamewithWeb() {
 async function googleimage(inputStr, mainMsg, safe) {
 	let keyword = inputStr.replace(mainMsg + " ", "")
 	//let page = Math.floor((Math.random() * (10)) * 10) + 1;
-	let start=1
-	let end=10
+	let start=0
+	let end=91
 	let page = Math.floor((Math.random() * end-start) + start)
 	//let page = 1
 	console.log("page:"+page)
