@@ -911,10 +911,9 @@ async function googleimage(inputStr, mainMsg, safe) {
 		.then(async images => {
 			if (images[0]) {
 				//let resultnum = Math.floor((Math.random() * (images.length)) + 0)
-				var imagesItem = images.filter(item => isImage(item.url)&& !imageFailUrl(item.url) );
-				let resultnum = Math.floor((Math.random() * (imagesItem.length - 1)) + 1)
+				let resultnum = Math.floor((Math.random() * (images.length - 1)) + 1)
 				console.log("resultnum:"+resultnum)
-				return imagesItem[resultnum].url;
+				return images[resultnum].url;
 			}
 
 		}).catch(err => {
