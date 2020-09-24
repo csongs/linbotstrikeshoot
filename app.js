@@ -724,13 +724,13 @@ function executeMonstrikeUrlStageStr(inputMsg,source,userName){
 		if(ansData.length>0){
 				ansData=ansData.slice(0,5);
 				let body=  ansData.map((data) => ({
-								thumbnailImageUrl: data[2],
-								title: data[0],
-								text: data[1],
+								thumbnailImageUrl: data.picUrl,
+								title: data.name,
+								text: data.stage,
 								actions:
 									[
-										{ label: '圖鑑資料', type: 'uri', uri: data[4] },
-										{ label: '前往攻略', type: 'uri', uri: data[3] },
+										{ label: '圖鑑資料', type: 'uri', uri: data.dataUrl },
+										{ label: '前往攻略', type: 'uri', uri: data.stageUrl },
 									],
 							}));
 				
