@@ -380,7 +380,8 @@ async function handleText(message, replyToken, source,userName) {
 		 }else{
 			  return client.replyMessage(
 				replyToken,
-				ret);
+				{ type: 'text', text: ret}
+				);
 		 }
 		 
 	}
