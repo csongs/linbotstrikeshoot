@@ -27,8 +27,8 @@ const isImage = require('is-image');
 
 //const settings = require('./settings');//客製化設定
 const skstUtil = require('./lib/skstUtil');
-const botModel = require('./model/botDTO');
-var GamewithWebDTO = require("./model/gamewithWebDTO");
+const botModel = require('./model/BotDTO');
+var GamewithWebDTO = require("./model/GamewithWebDTO");
 
 
 /**
@@ -371,12 +371,17 @@ async function handleText(message, replyToken, source,userName) {
 		 console.log("image:"+ret);
 		 if(ret==429){
 			 return replyText(replyToken,"查詢額度已用完QQ");
-		 }else{
+		 }else if(isImage(ret)){
 			return client.replyMessage(replyToken,{
 			  type: 'image',
 			  originalContentUrl:ret,
 			  previewImageUrl: ret,
 			}); 
+		 }else{
+			  return client.replyMessage(
+				replyToken,
+				{ type: 'text', text: ret}
+				);
 		 }
 		 
 	}
@@ -720,13 +725,13 @@ function executeMonstrikeUrlStageStr(inputMsg,source,userName){
 		if(ansData.length>0){
 				ansData=ansData.slice(0,5);
 				let body=  ansData.map((data) => ({
-								thumbnailImageUrl: data[2],
-								title: data[0],
-								text: data[1],
+								thumbnailImageUrl: data.picUrl,
+								title: data.name,
+								text: data.stage,
 								actions:
 									[
-										{ label: '圖鑑資料', type: 'uri', uri: data[4] },
-										{ label: '前往攻略', type: 'uri', uri: data[3] },
+										{ label: '圖鑑資料', type: 'uri', uri: data.dataUrl },
+										{ label: '前往攻略', type: 'uri', uri: data.stageUrl },
 									],
 							}));
 				
@@ -828,6 +833,7 @@ function jpGamewithWeb() {
 
 					 if (gamewithWebDTO.check())
 					 {
+						 //console.log(gamewithWebDTO)
 						 item.push(gamewithWebDTO);
 					 }
 					
@@ -849,10 +855,12 @@ function jpGamewithWeb() {
 					
 					 if ( gamewithWebDTO.check())
 					 {
+						 //console.log(gamewithWebDTO)
 						 item.push(gamewithWebDTO);
 					 }
 					
 				});
+				
 				//合併
 				for (var i = 0; i < item.length; i ++) {
 					//去掉重複
@@ -866,8 +874,14 @@ function jpGamewithWeb() {
 				//callback( undefined,item);
 				//先暫存為global變數
 				stageData=item;
-				resolve(item);
+				
+				resolve(stageData);
+				//console.log(stageData)
+				//skstUtil.writeFile('./stage.txt',JSON.stringify(stageData));
+				let ansData=skstUtil.selectKeySet(stageData,"暴威の鬼神、乱逆の");
+				console.log(ansData);
 				console.log('攻略資料更新完畢!目前共'+stageData.length+'筆');
+				
 			}
 			
 			
@@ -886,7 +900,7 @@ async function googleimage(inputStr, mainMsg, safe) {
 	let keyword = inputStr.replace(mainMsg + " ", "")
 	//let page = Math.floor((Math.random() * (10)) * 10) + 1;
 	let start=1
-	let end=10
+	let end=50
 	let page = Math.floor((Math.random() * end-start) + start)
 	//let page = 1
 	console.log("page:"+page)
@@ -898,10 +912,9 @@ async function googleimage(inputStr, mainMsg, safe) {
 		.then(async images => {
 			if (images[0]) {
 				//let resultnum = Math.floor((Math.random() * (images.length)) + 0)
-				var imagesItem = images.filter(item => isImage(item.url)&& !imageFailUrl(item.url) );
-				let resultnum = Math.floor((Math.random() * (imagesItem.length - 1)) + 1)
+				let resultnum = Math.floor((Math.random() * (images.length - 1)) + 1)
 				console.log("resultnum:"+resultnum)
-				return imagesItem[resultnum].url;
+				return images[resultnum].url;
 			}
 
 		}).catch(err => {
@@ -912,12 +925,7 @@ async function googleimage(inputStr, mainMsg, safe) {
 		})
 }
 
-function imageFailUrl(url){
-	return skstUtil.strContain(url,"http://pic.pimg.tw")||
-	skstUtil.strContain(url,"cdn.sohucs.com")||
-	skstUtil.strContain(url,"http://hkpic.crntt.com")||
-	skstUtil.strContain(url,"http://img.mm4000.com")
-}
+
 
  /**
  *Google問卷處理
