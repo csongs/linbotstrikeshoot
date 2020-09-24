@@ -371,12 +371,16 @@ async function handleText(message, replyToken, source,userName) {
 		 console.log("image:"+ret);
 		 if(ret==429){
 			 return replyText(replyToken,"查詢額度已用完QQ");
-		 }else{
+		 }else if(isImage(ret)){
 			return client.replyMessage(replyToken,{
 			  type: 'image',
 			  originalContentUrl:ret,
 			  previewImageUrl: ret,
 			}); 
+		 }else{
+			  return client.replyMessage(
+				replyToken,
+				ret);
 		 }
 		 
 	}
@@ -898,10 +902,9 @@ async function googleimage(inputStr, mainMsg, safe) {
 		.then(async images => {
 			if (images[0]) {
 				//let resultnum = Math.floor((Math.random() * (images.length)) + 0)
-				var imagesItem = images.filter(item => isImage(item.url)&& !imageFailUrl(item.url) );
-				let resultnum = Math.floor((Math.random() * (imagesItem.length - 1)) + 1)
+				let resultnum = Math.floor((Math.random() * (item.length - 1)) + 1)
 				console.log("resultnum:"+resultnum)
-				return imagesItem[resultnum].url;
+				return item[resultnum].url;
 			}
 
 		}).catch(err => {
@@ -912,12 +915,7 @@ async function googleimage(inputStr, mainMsg, safe) {
 		})
 }
 
-function imageFailUrl(url){
-	return skstUtil.strContain(url,"http://pic.pimg.tw")||
-	skstUtil.strContain(url,"cdn.sohucs.com")||
-	skstUtil.strContain(url,"http://hkpic.crntt.com")||
-	skstUtil.strContain(url,"http://img.mm4000.com")
-}
+
 
  /**
  *Google問卷處理
