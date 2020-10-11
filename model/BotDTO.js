@@ -17,7 +17,7 @@ function checkCommand(msg) {
 /**
 * 是否玩選擇遊戲
 */
-exports.isPlayChoice = (text) => {
+function isPlayChoice(text) {
     let re = /\S+\s*choice\s+(\s?,?\S+)+/;
 
     let ret = false;
@@ -31,7 +31,7 @@ exports.isPlayChoice = (text) => {
 /**
 * 是否為圖片指令
 */
-exports.isImageCmd = (text) => {
+function isImageCmd(text) {
     let re = /.image\s+(\s?,?\S+)+/;
     let ret = false;
     if (String(text).match(re) != null) {
@@ -44,7 +44,7 @@ exports.isImageCmd = (text) => {
 /**
 * 是否查詢抽卡機率
 */
-exports.isGachaCmd = (text) => {
+function isGachaCmd(text) {
     let re = /抽抽+/;
     let ret = false;
     if (String(text).match(re) != null) {
@@ -54,7 +54,7 @@ exports.isGachaCmd = (text) => {
     return ret;
 }
 
-exports.openWaitGachaCmd = (text) => {
+function openWaitGachaCmd(text) {
     let re = /抽抽開+/;
     let ret = false;
     if (String(text).match(re) != null) {
@@ -64,7 +64,7 @@ exports.openWaitGachaCmd = (text) => {
     return ret;
 }
 
-exports.closeWaitGachaCmd = (text) => {
+function closeWaitGachaCmd(text) {
     let re = /抽抽關+/;
     let ret = false;
     if (String(text).match(re) != null) {
