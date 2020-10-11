@@ -383,6 +383,21 @@ async function handleText(message, replyToken, source, userName) {
 
 	}
 
+	else if (botModel.openWaitGachaCmd(message.text)) {
+		skstUtil.openNotifyWaitGachaWeb();
+		return client.replyMessage(
+			replyToken,
+			{ type: 'text', text: "Notify 抽抽已啟動" }
+		)
+	}
+
+	else if (botModel.closeWaitGachaCmd(message.text)) {
+		skstUtil.closeNotifyWaitGachaWeb();
+		return client.replyMessage(
+			replyToken,
+			{ type: 'text', text: "Notify 抽抽已關閉" }
+		)
+	}
 	//玩選擇遊戲
 	else if (botModel.isPlayChoice(message.text)) {
 		let str = message.text.replace(/[\s\S]+choice/g, '');//指令格式保留選項
