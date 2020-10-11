@@ -558,6 +558,7 @@ function jpGamewithWeb() {
 	clearTimeout(timer);
 	skstUtil.jpGamewithWeb().then((ret) => {
 		stageData=ret;
+		console.log('攻略資料更新完畢!目前共' + stageData.length + '筆');		
 	});
 	timer = setInterval(jpGamewithWeb, 30 * 60 * 1000); //每半小時抓取一次新資料
 }
