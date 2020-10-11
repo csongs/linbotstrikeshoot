@@ -632,10 +632,7 @@ function jpGamewithWeb() {
 				stageData = item;
 
 				resolve(stageData);
-				//console.log(stageData)
-				//skstUtil.writeFile('./stage.txt',JSON.stringify(stageData));
-				//let ansData=skstUtil.selectKeySet(stageData,"暴威の鬼神、乱逆の");
-				//console.log(ansData);
+				skstUtil.writeFile('./stage.txt',JSON.stringify(stageData));
 				console.log('攻略資料更新完畢!目前共' + stageData.length + '筆');
 
 			}
