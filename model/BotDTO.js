@@ -15,6 +15,67 @@ function checkCommand(msg) {
 }
 
 /**
+* 是否玩選擇遊戲
+*/
+exports.isPlayChoice = (text) => {
+    let re = /\S+\s*choice\s+(\s?,?\S+)+/;
+
+    let ret = false;
+    if (String(text).match(re) != null) {
+        ret = true
+    }
+    console.log("isPlayChoice:" + text + ':' + ret);
+    return ret;
+}
+
+/**
+* 是否為圖片指令
+*/
+exports.isImageCmd = (text) => {
+    let re = /.image\s+(\s?,?\S+)+/;
+    let ret = false;
+    if (String(text).match(re) != null) {
+        ret = true
+    }
+    console.log("isImageCmd:" + text + ':' + ret);
+    return ret;
+}
+
+/**
+* 是否查詢抽卡機率
+*/
+exports.isGachaCmd = (text) => {
+    let re = /抽抽+/;
+    let ret = false;
+    if (String(text).match(re) != null) {
+        ret = true
+    }
+    console.log("isGachaCmd:" + text + ':' + ret);
+    return ret;
+}
+
+exports.openWaitGachaCmd = (text) => {
+    let re = /抽抽開+/;
+    let ret = false;
+    if (String(text).match(re) != null) {
+        ret = true
+    }
+    console.log("openWaitGachaCmd:" + text + ':' + ret);
+    return ret;
+}
+
+exports.closeWaitGachaCmd = (text) => {
+    let re = /抽抽關+/;
+    let ret = false;
+    if (String(text).match(re) != null) {
+        ret = true
+    }
+    console.log("closeWaitGachaCmd:" + text + ':' + ret);
+    return ret;
+}
+
+
+/**
  * 預設對話內容
  */
 function getDefaultMsg() {
@@ -98,8 +159,10 @@ function getDefaultMsgHelp() {
                 text: '指令教學',
                 actions: [
                     { label: '幫你做決定~', type: 'message', text: '小拿 choice 可愛 超可愛' },
-                    { label: 'line邀請關卡連結來找攻略', type: 'message', text: 'モンストでマルチしない？\n「玉楼-暴威の鬼神、乱逆の咎（超絶）」' },
-                    { label: '看到特定文字回話', type: 'message', text: '小拿 學習 小拿好可愛 謝謝你>///<' }
+                    { label: 'line邀請關卡連結來找攻略', type: 'message', text: 'モンストでマルチしない？\n光をもたらす者 ルシファー【超究極】' },
+                    { label: '看到特定文字回話', type: 'message', text: '小拿 學習 小拿好可愛 謝謝你>///<' },
+                    { label: '查詢模擬轉蛋機率', type: 'message', text: '抽抽' },
+                    { label: '啟動Notfiy查詢模擬轉蛋機率', type: 'message', text: '抽抽開' },
                 ]
             }
         }

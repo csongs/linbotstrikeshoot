@@ -339,7 +339,7 @@ async function handleText(message, replyToken, source, userName) {
 		);
 	}
 	//圖片指令
-	else if (skstUtil.isImageCmd(message.text)) {
+	else if (botModel.isImageCmd(message.text)) {
 		var ret = await googleimage(message.text, ".image", "high")
 		console.log("image:" + ret);
 		if (ret == 429) {
@@ -360,7 +360,7 @@ async function handleText(message, replyToken, source, userName) {
 	}
 
 	// 抽卡機率網站
-	else if (skstUtil.isGachaCmd(message.text)) {
+	else if (botModel.isGachaCmd(message.text)) {
 
 		skstUtil.gachaWeb().then((ret) => {
 			tinyURL.shorten(ret[0]).then(function (imgUrl) {
@@ -384,7 +384,7 @@ async function handleText(message, replyToken, source, userName) {
 	}
 
 	//玩選擇遊戲
-	else if (skstUtil.isPlayChoice(message.text)) {
+	else if (botModel.isPlayChoice(message.text)) {
 		let str = message.text.replace(/[\s\S]+choice/g, '');//指令格式保留選項
 		let items = str.split(/[\s+,+]/).filter(e => e != '') //選擇項目陣列
 		let item = items[Math.floor(Math.random() * (items.length))] //隨機選一個項目
