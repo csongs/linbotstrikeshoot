@@ -24,3 +24,21 @@ describe('#test isPlayChoice', () => {
         done()
     })
 });
+
+describe('#test isGachaCmd', () => {
+    // 測是文字: 抽抽
+    it('should return true when 抽抽 ', done => {
+        let text = "抽抽";
+        let ret = botDTO.isGachaCmd(text);
+        ret.should.equal(true);
+        done()
+    })
+
+    // 測是文字: 抽抽開
+    it('should return false when 抽抽開 ', done => {
+        let text = "抽抽開";
+        let ret = botDTO.isGachaCmd(text);
+        ret.should.equal(false);
+        done()
+    })
+});

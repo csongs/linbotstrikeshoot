@@ -45,7 +45,7 @@ function isImageCmd(text) {
 * 是否查詢抽卡機率
 */
 function isGachaCmd(text) {
-    let re = /抽抽+/;
+    let re = /抽抽$/;
     let ret = false;
     if (String(text).match(re) != null) {
         ret = true
@@ -55,7 +55,7 @@ function isGachaCmd(text) {
 }
 
 function openWaitGachaCmd(text) {
-    let re = /抽抽開+/;
+    let re = /抽抽開$/;
     let ret = false;
     if (String(text).match(re) != null) {
         ret = true
@@ -65,7 +65,7 @@ function openWaitGachaCmd(text) {
 }
 
 function closeWaitGachaCmd(text) {
-    let re = /抽抽關+/;
+    let re = /抽抽關$/;
     let ret = false;
     if (String(text).match(re) != null) {
         ret = true
@@ -162,7 +162,7 @@ function getDefaultMsgHelp() {
                     { label: 'line邀請關卡連結來找攻略', type: 'message', text: 'モンストでマルチしない？\n光をもたらす者 ルシファー【超究極】' },
                     { label: '看到特定文字回話', type: 'message', text: '小拿 學習 小拿好可愛 謝謝你>///<' },
                     { label: '查詢模擬轉蛋機率', type: 'message', text: '抽抽' },
-                    { label: '啟動Notfiy查詢模擬轉蛋機率', type: 'message', text: '抽抽開' },
+                    { label: '啟動Notfiy查詢模擬轉蛋機率', type: 'message', text: '抽抽開' }
                 ]
             }
         }
