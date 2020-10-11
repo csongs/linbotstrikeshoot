@@ -6,7 +6,6 @@
 
 const line = require('@line/bot-sdk'); // line sdk
 const express = require('express'); //web 需要的套件
-const cheerio = require("cheerio"); //爬蟲需要的套件
 const google = require('googleapis');//google api
 const googleAuth = require('google-auth-library');//google auth
 const GoogleImages = require('google-images');
@@ -15,10 +14,6 @@ const GoogleImages = require('google-images');
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
-
-const request = require("request");
-
-
 
 const async = require('async');
 const tinyURL = require('tinyurl');
@@ -560,93 +555,12 @@ function executeCommand(msgCommand, source, userName) {
 
 //爬蟲怪物攻略
 function jpGamewithWeb() {
-	//var callback = typeof arguments[arguments.length - 1] === "function" ? arguments[arguments.length - 1] : function() {};
 	clearTimeout(timer);
-	new Promise((resolve, reject) => {
-		request({
-			url: 'https://xn--eckwa2aa3a9c8j8bve9d.gamewith.jp/article/show/3054',
-			method: 'get'
-		}, (err, res, data) => {
-			if (err) {
-				console.log(err);
-				reject(err);
-				//return ;
-			} else if (res && res.statusCode === 200) {
-				$ = cheerio.load(data);
-				var item = [];
-				var item2 = [];
-				//console.log("data:"+data);
-
-				$("tr").has('data-col3')
-				//第一種規則
-				$(".js-lazyload-fixed-size-img.c-blank-img.w-article-img").each(function (i, elem) {
-					let gamewithWebDTO = new GamewithWebDTO(
-						($(this).parents('a').text().replace(/<[^>]*>/g, '')),//名稱
-						($(this).parents('td').next().text()),//關卡
-						($(this).attr('data-original')),//圖片
-						($(this).parents('td').next().children('a').attr('href')),//關卡連結
-						($(this).parent('a').attr('href')),//圖鑑連結
-					);
-
-
-					if (gamewithWebDTO.check()) {
-						//console.log(gamewithWebDTO)
-						item.push(gamewithWebDTO);
-					}
-
-				});
-				//第二種規則
-				var data2 = $("tr").filter(function () {
-					return $(this).attr('data-col1') !== undefined
-				});
-				data2.each(function (i, elem) {
-
-					let gamewithWebDTO = new GamewithWebDTO(
-						($(this).data('col1')),//名稱
-						($(this).data('col2')),//關卡
-						($(this).children('td').children('div').children('a').children('img').attr('src')),//圖片
-						($(this).children("td").next().children("a").attr("href")),//關卡連結
-						($(this).children("td").children("a").attr("href")),//圖鑑連結
-					);
-
-
-					if (gamewithWebDTO.check()) {
-						//console.log(gamewithWebDTO)
-						item.push(gamewithWebDTO);
-					}
-
-				});
-
-				//合併
-				for (var i = 0; i < item.length; i++) {
-					//去掉重複
-					item2 = item2.filter(n => item[i][0].indexOf(n[0]) < 0);
-				}
-				for (var i = 0; i < item2.length; i++) {
-					item[index + i] = item2[i]
-				}
-
-				//console.log(item2);
-				//callback( undefined,item);
-				//先暫存為global變數
-				stageData = item;
-
-				resolve(stageData);
-				skstUtil.writeFile('./stage.txt',JSON.stringify(stageData));
-				console.log('攻略資料更新完畢!目前共' + stageData.length + '筆');
-
-			}
-
-
-		});
-	}).catch((error) => { console.error(error); });;
-
+	skstUtil.jpGamewithWeb().then((ret) => {
+		stageData=ret;
+	});
 	timer = setInterval(jpGamewithWeb, 30 * 60 * 1000); //每半小時抓取一次新資料
-
 }
-
-//=======gamertb=======
-
 
 // 圖片
 async function googleimage(inputStr, mainMsg, safe) {

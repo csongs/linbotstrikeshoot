@@ -23,6 +23,4 @@ class GamewithWebDTO {
 
 }
 
-
-
 module.exports = GamewithWebDTO;

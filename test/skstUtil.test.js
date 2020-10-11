@@ -60,3 +60,15 @@ describe('#test getMonstrikeUrlStageStr and selectKeySet', () => {
     })
     
 });
+
+
+describe('#test jpGamewithWeb', function(){
+    this.timeout(3000);
+    it('should return true when jpGamewithWeb() ', done => {
+        skstUtil.jpGamewithWeb().then((ret)=>{
+            should.notEqual(ret.length,0);
+            done();
+        })
+        
+    })
+});
