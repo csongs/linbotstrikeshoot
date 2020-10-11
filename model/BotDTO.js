@@ -204,6 +204,11 @@ module.exports = {
     //-------------
     checkCommand: checkCommand,
     getSticker: getSticker,
+    isPlayChoice:isPlayChoice,
+    isImageCmd:isImageCmd,
+    isGachaCmd:isGachaCmd,
+    openWaitGachaCmd:openWaitGachaCmd,
+    closeWaitGachaCmd:closeWaitGachaCmd,
     //-------------
     getDefaultMsg: getDefaultMsg,
     getDefaultMsgHello: getDefaultMsgHello,
