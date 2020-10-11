@@ -161,6 +161,18 @@ function getDefaultMsgHelp() {
                     { label: '幫你做決定~', type: 'message', text: '小拿 choice 可愛 超可愛' },
                     { label: 'line邀請關卡連結來找攻略', type: 'message', text: 'モンストでマルチしない？\n光をもたらす者 ルシファー【超究極】' },
                     { label: '看到特定文字回話', type: 'message', text: '小拿 學習 小拿好可愛 謝謝你>///<' },
+                ]
+            }
+        },
+        {
+            type: 'template',
+            altText: '已顯示教學內容',
+            template: {
+                type: 'buttons',
+                thumbnailImageUrl: 'https://i.imgur.com/kQXeQfE.png',
+                title: '來轉蛋吧',
+                text: '指令教學',
+                actions: [
                     { label: '查詢模擬轉蛋機率', type: 'message', text: '抽抽' },
                     { label: '啟動Notfiy查詢模擬轉蛋機率', type: 'message', text: '抽抽開' }
                 ]
