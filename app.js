@@ -361,11 +361,12 @@ async function handleText(message, replyToken, source, userName) {
 			tinyURL.shorten(ret[0]).then(function (imgUrl) {
 				console.log("imgUrl:" + imgUrl);
 				let msg = [
+					/*
 					{
 						type: 'image',
 						originalContentUrl: imgUrl,
 						previewImageUrl: imgUrl,
-					},
+					},*/
 					{
 						type: 'text',
 						text: ret[1]
