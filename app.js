@@ -478,7 +478,7 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		let msg = "";
 		if (ansData.length > 0) {
 			ansData = ansData.slice(0, 4);
-			/*
+			
 			let body = ansData.map((data) => ({
 				thumbnailImageUrl: data.picUrl,
 				title: data.name,
@@ -489,12 +489,12 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 						{ label: '前往攻略', type: 'uri', uri: data.stageUrl },
 					],
 			}));
-			*/
+			
 			
 			// gamewith url
 			let gamewith_app_prefix = "gamewith://line?message_url=";
-			//body.unshift
-			let body={
+			body.unshift({
+			//let body={
 				thumbnailImageUrl: "https://gamewith.co.jp/wp-content/themes/corporate2017/images/logo.png",
 				title: "gamewith",
 				actions:
@@ -502,7 +502,7 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 						{ label: '開啟招募連結', type: 'uri', uri: gamewith_app_prefix+"123" }
 					],
 			}
-
+			console.log("body:" + body)
 			//line回話
 			msg = [{
 				type: 'template',
