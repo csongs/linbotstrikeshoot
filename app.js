@@ -507,7 +507,7 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		}
 		return msg;
 		*/
-	}
+	
 	// gamewith url
 	let gamewith_app_prefix = "gamewith://line?message_url=";
 	//body.unshift({
