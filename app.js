@@ -519,7 +519,7 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 			text: "123",
 			actions:
 				[
-					{ label: '開啟招募連結', type: 'uri', uri: messageUrl }
+					{ label: '開啟招募連結', type: 'uri', uri: '123' }
 				],
 		}
 		//line回話
