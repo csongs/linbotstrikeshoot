@@ -494,14 +494,14 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 			// gamewith url
 			gamewith_app_prefix = "gamewith://line?message_url=";
 			//body.unshift
-			body=({
+			body={
 				thumbnailImageUrl: "https://gamewith.co.jp/wp-content/themes/corporate2017/images/logo.png",
 				title: "gamewith",
 				actions:
 					[
-						{ label: '開啟招募連結', type: 'uri', uri: gamewith_app_prefix+inputMsg },
+						{ label: '開啟招募連結', type: 'uri', uri: gamewith_app_prefix+"132" }
 					],
-			})
+			}
 
 			//line回話
 			msg = [{
