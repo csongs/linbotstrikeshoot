@@ -499,7 +499,7 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 				title: "gamewith",
 				actions:
 					[
-						{ label: '開啟招募連結', type: 'uri', uri: gamewith_app_prefix+inputMsg }
+						{ label: '開啟招募連結', type: 'uri', uri: gamewith_app_prefix+"123" }
 					],
 			}
 
