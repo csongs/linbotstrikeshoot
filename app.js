@@ -492,14 +492,14 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 			*/
 			
 			// gamewith url
-			gamewith_app_prefix = "gamewith://line?message_url=";
+			let gamewith_app_prefix = "gamewith://line?message_url=";
 			//body.unshift
-			body={
+			let body={
 				thumbnailImageUrl: "https://gamewith.co.jp/wp-content/themes/corporate2017/images/logo.png",
 				title: "gamewith",
 				actions:
 					[
-						{ label: '開啟招募連結', type: 'uri', uri: gamewith_app_prefix+"132" }
+						{ label: '開啟招募連結', type: 'uri', uri: gamewith_app_prefix+inputMsg }
 					],
 			}
 
