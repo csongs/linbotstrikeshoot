@@ -501,7 +501,7 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 					[
 						{ label: '開啟招募連結', type: 'uri', uri: gamewith_app_prefix+inputMsg }
 					],
-			})
+			}
 			console.log("body:" + body)
 			//line回話
 			msg = [{
