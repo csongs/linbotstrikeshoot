@@ -478,6 +478,7 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		let msg = "";
 		if (ansData.length > 0) {
 			ansData = ansData.slice(0, 4);
+			/*
 			let body = ansData.map((data) => ({
 				thumbnailImageUrl: data.picUrl,
 				title: data.name,
@@ -488,10 +489,12 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 						{ label: '前往攻略', type: 'uri', uri: data.stageUrl },
 					],
 			}));
+			*/
 			
 			// gamewith url
 			gamewith_app_prefix = "gamewith://line?message_url=";
-			body.unshift({
+			//body.unshift
+			body=({
 				thumbnailImageUrl: "https://gamewith.co.jp/wp-content/themes/corporate2017/images/logo.png",
 				title: "gamewith",
 				actions:
