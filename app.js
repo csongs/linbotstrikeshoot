@@ -511,18 +511,17 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 	
 		// gamewith url
 		let gamewithAppPrefix = "gamewith://line?message_url=";
-		let messageUrl=(gamewithAppPrefix+inputMsg).replace(/(\r\n\t|\n|\r\t)/gm,'/n');
+		let messageUrl=gamewithAppPrefix+inputMsg.replace(/(\r\n\t|\n|\r\t)/gm,'/n');
 		//body.unshift({
 		let body={
 			thumbnailImageUrl: "https://gamewith.co.jp/wp-content/themes/corporate2017/images/logo.png",
 			title: "gamewith",
+			text: "123",
 			actions:
 				[
 					{ label: '開啟招募連結', type: 'uri', uri: messageUrl }
 				],
 		}
-		
-		console.log("body:" + body)
 		//line回話
 		msg = [{
 			type: 'template',
