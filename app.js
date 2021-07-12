@@ -516,13 +516,9 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		let gamewithAppPrefix = "gamewith://line?message_url=";
 		let messageUrl=""
 		let options = {};
-		tmp.tmpName(options, function _tempNameGenerated(err, path) {
-			if (err) throw err;
-			skstUtil.writeFile(path,inputMsg);
-			console.log('Created temporary filename: ', path);
-			messageUrl=gamewithAppPrefix+baseURL+path.replace("\\","/");
-			console.log('messageUrl: ', messageUrl);
-		});
+		let fileName="static/tmp/"+skstUtil.getMonstrikePassCode(inputMsg)+".txt";
+		skstUtil.writeFile(fileName,inputMsg);
+		messageUrl=gamewithAppPrefix+baseURL+path.replace("\\","/");
 		
 		
 		//body.unshift({
