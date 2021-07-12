@@ -517,7 +517,7 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		let messageUrl=""
 		let fileName=skstUtil.getMonstrikePassCode(inputMsg)+".txt";
 		app.use('/static', express.static('/tmp'));
-		skstUtil.writeFile('/tmp/'+fileName,inputMsg)
+		//skstUtil.writeFile('/tmp/'+fileName,inputMsg)
 		messageUrl=gamewithAppPrefix+baseURL+'/static/'+fileName.replace("\\","/");
 		//body.unshift({
 		let body={
