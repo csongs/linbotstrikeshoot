@@ -517,29 +517,29 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		let messageUrl=""
 		let fileName=skstUtil.getMonstrikePassCode(inputMsg)+".txt";
 		app.use('/static', express.static('/tmp'));
-		skstUtil.writeFile('/tmp/'+fileName,inputMsg).then((ret) => {
-			messageUrl=gamewithAppPrefix+baseURL+'/static/'+fileName.replace("\\","/");
-			//body.unshift({
-			let body={
-				thumbnailImageUrl: "https://gamewith.co.jp/wp-content/themes/corporate2017/images/logo.png",
-				title: "gamewith",
-				actions:[
-						{ label: '開啟招募連結', type: 'uri', uri: messageUrl }
-				],
-			}
-			//line回話
-			msg = [{
-				type: 'template',
-				altText: '已顯示訊息=)',
-				text: "gamewith",
-				template: {
-					type: 'carousel',
-					columns: body,
-				},
+		skstUtil.writeFile('/tmp/'+fileName,inputMsg)
+		messageUrl=gamewithAppPrefix+baseURL+'/static/'+fileName.replace("\\","/");
+		//body.unshift({
+		let body={
+			thumbnailImageUrl: "https://gamewith.co.jp/wp-content/themes/corporate2017/images/logo.png",
+			title: "gamewith",
+			actions:[
+					{ label: '開啟招募連結', type: 'uri', uri: messageUrl }
+			],
+		}
+		//line回話
+		msg = [{
+			type: 'template',
+			altText: '已顯示訊息=)',
+			text: "gamewith",
+			template: {
+				type: 'carousel',
+				columns: body,
 			},
-			]
-			return msg;
-		});
+		},
+		]
+		return msg;
+		
 		
 	}else{
 		return null;
