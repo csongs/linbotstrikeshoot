@@ -14,7 +14,6 @@ const GoogleImages = require('google-images');
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
-const tmp = require('tmp');
 
 const async = require('async');
 const tinyURL = require('tinyurl');
@@ -515,8 +514,7 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		// gamewith url
 		let gamewithAppPrefix = "gamewith://line?message_url=";
 		let messageUrl=""
-		let options = {};
-		let fileName="static/tmp/"+skstUtil.getMonstrikePassCode(inputMsg)+".txt";
+		let fileName="/static/tmp/"+skstUtil.getMonstrikePassCode(inputMsg)+".txt";
 		skstUtil.writeFile(fileName,inputMsg);
 		messageUrl=gamewithAppPrefix+baseURL+path.replace("\\","/");
 		
