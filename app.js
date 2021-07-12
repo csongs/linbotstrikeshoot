@@ -329,7 +329,7 @@ async function handleText(message, replyToken, source, userName) {
 	console.log(message.text);
 
 	//攻略url
-	let stageUrl = await executeMonstrikeUrlStageStr(message.text, source, userName);
+	let stageUrl = executeMonstrikeUrlStageStr(message.text, source, userName);
 	console.log("stageUrl:" + stageUrl);
 	if (stageUrl != null) {
 		return client.replyMessage(
@@ -473,7 +473,7 @@ app.listen(port, () => {
 
 
 //攻略url
-async function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
+function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 	//攻略網址偵測
 	
 	let stageKeyword = skstUtil.getMonstrikeUrlStageStr(inputMsg);
