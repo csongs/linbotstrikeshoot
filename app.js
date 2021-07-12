@@ -330,6 +330,7 @@ async function handleText(message, replyToken, source, userName) {
 
 	//攻略url
 	let stageUrl = await executeMonstrikeUrlStageStr(message.text, source, userName);
+	console.log("stageUrl:" + stageUrl);
 	if (stageUrl != null) {
 		return client.replyMessage(
 			replyToken,
