@@ -329,11 +329,7 @@ async function handleText(message, replyToken, source, userName) {
 	console.log(message.text);
 
 	//攻略url
-	let stageUrl = null
-	executeMonstrikeUrlStageStr(message.text, source, userName).then((ret) => {
-		stageUrl = ret
-		console.log("stageUrl:end";
-	}};
+	let stageUrl = await executeMonstrikeUrlStageStr(message.text, source, userName)
 	console.log("stageUrl:next";
 	if (stageUrl != null) {
 		return client.replyMessage(
