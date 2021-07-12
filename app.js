@@ -14,6 +14,7 @@ const GoogleImages = require('google-images');
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
+const tmp = require('tmp');
 
 const async = require('async');
 const tinyURL = require('tinyurl');
@@ -23,6 +24,9 @@ const skstUtil = require('./lib/skstUtil');
 const botModel = require('./model/BotDTO');
 var GamewithWebDTO = require("./model/GamewithWebDTO");
 
+
+// base URL for webhook server
+let baseURL = process.env.BASE_URL;
 
 /**
  * 控制變數
@@ -508,19 +512,26 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		}
 		return msg;
 		*/
-	
 		// gamewith url
 		let gamewithAppPrefix = "gamewith://line?message_url=";
-		let messageUrl=gamewithAppPrefix+inputMsg.replace(/(\r\n\t|\n|\r\t)/gm,'/n');
+		let messageUrl=""
+		tmp.tmpName(options, function _tempNameGenerated(err, path) {
+			if (err) throw err;
+			skstUtil.writeFile(path,inputMsg);
+			console.log('Created temporary filename: ', path);
+			messageUrl=gamewithAppPrefix+path.replace("\\","/");
+			console.log('messageUrl: ', messageUrl);
+		});
+		
+		
 		//body.unshift({
 		let body={
 			thumbnailImageUrl: "https://gamewith.co.jp/wp-content/themes/corporate2017/images/logo.png",
 			title: "gamewith",
-			text: "123",
-			actions:
-				[
-					{ label: '開啟招募連結', type: 'uri', uri: '123' }
-				],
+			text: "gamewith",
+			actions:[
+					{ label: '開啟招募連結', type: 'uri', uri: messageUrl }
+			],
 		}
 		//line回話
 		msg = [{
