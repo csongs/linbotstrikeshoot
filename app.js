@@ -514,10 +514,10 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		// gamewith url
 		let gamewithAppPrefix = "gamewith://line?message_url=";
 		let messageUrl=""
-		let fileName=skstUtil.getMonstrikePassCode(inputMsg)+".txt";
-		app.use('/static', express.static(fileName + '/public'));
+		let fileName='/tmp/'skstUtil.getMonstrikePassCode(inputMsg)+".txt";
+		app.use('/static', express.static('/tmp'));
 		skstUtil.writeFile(fileName,inputMsg);
-		messageUrl=gamewithAppPrefix+baseURL+path.replace("\\","/");
+		messageUrl=gamewithAppPrefix+baseURL+'/static'+fileName.replace("\\","/");
 		
 		
 		//body.unshift({
