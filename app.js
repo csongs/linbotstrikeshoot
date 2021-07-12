@@ -329,7 +329,7 @@ async function handleText(message, replyToken, source, userName) {
 	console.log(message.text);
 
 	//攻略url
-	let stageUrl = executeMonstrikeUrlStageStr(message.text, source, userName);
+	let stageUrl = await executeMonstrikeUrlStageStr(message.text, source, userName);
 	if (stageUrl != null) {
 		return client.replyMessage(
 			replyToken,
@@ -472,7 +472,7 @@ app.listen(port, () => {
 
 
 //攻略url
-function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
+async function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 	//攻略網址偵測
 	
 	let stageKeyword = skstUtil.getMonstrikeUrlStageStr(inputMsg);
@@ -514,10 +514,10 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		// gamewith url
 		let gamewithAppPrefix = "gamewith://line?message_url=";
 		let messageUrl=""
-		let fileName='/tmp/'+skstUtil.getMonstrikePassCode(inputMsg)+".txt";
+		let fileName=skstUtil.getMonstrikePassCode(inputMsg)+".txt";
 		app.use('/static', express.static('/tmp'));
-		skstUtil.writeFile(fileName,inputMsg);
-		messageUrl=gamewithAppPrefix+baseURL+'/static'+fileName.replace("\\","/");
+		skstUtil.writeFile('/tmp/'+fileName,inputMsg);
+		messageUrl=gamewithAppPrefix+baseURL+'/static/'+fileName.replace("\\","/");
 		
 		
 		//body.unshift({
