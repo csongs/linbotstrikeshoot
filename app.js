@@ -520,7 +520,7 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 			if (err) throw err;
 			skstUtil.writeFile(path,inputMsg);
 			console.log('Created temporary filename: ', path);
-			messageUrl=gamewithAppPrefix+path.replace("\\","/");
+			messageUrl=gamewithAppPrefix+baseURL+path.replace("\\","/");
 			console.log('messageUrl: ', messageUrl);
 		});
 		
@@ -529,7 +529,6 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		let body={
 			thumbnailImageUrl: "https://gamewith.co.jp/wp-content/themes/corporate2017/images/logo.png",
 			title: "gamewith",
-			text: "gamewith",
 			actions:[
 					{ label: '開啟招募連結', type: 'uri', uri: messageUrl }
 			],
@@ -538,6 +537,7 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		msg = [{
 			type: 'template',
 			altText: '已顯示訊息=)',
+			text: "gamewith",
 			template: {
 				type: 'carousel',
 				columns: body,
