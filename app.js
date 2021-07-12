@@ -515,6 +515,7 @@ function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		// gamewith url
 		let gamewithAppPrefix = "gamewith://line?message_url=";
 		let messageUrl=""
+		let options = {};
 		tmp.tmpName(options, function _tempNameGenerated(err, path) {
 			if (err) throw err;
 			skstUtil.writeFile(path,inputMsg);
