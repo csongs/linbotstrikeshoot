@@ -334,7 +334,7 @@ async function handleText(message, replyToken, source, userName) {
 	//let stageUrl = await executeMonstrikeUrlStageStr(message.text, source, userName)
 	console.log("stageUrl:next");
 	if (stageKeyword != null) {
-		let msg = await skstUtil.generateTogetherGamewithUrl(message.text)
+		let msg = await skstUtil.generateTogetherGamewithUrl(message.text,baseURL)
 		return client.replyMessage(
 			replyToken,
 			msg
