@@ -329,12 +329,14 @@ async function handleText(message, replyToken, source, userName) {
 	console.log(message.text);
 
 	//攻略url
-	let stageUrl = await executeMonstrikeUrlStageStr(message.text, source, userName)
+	let stageKeyword = skstUtil.getMonstrikeUrlStageStr(inputMsg);
+	//let stageUrl = await executeMonstrikeUrlStageStr(message.text, source, userName)
 	console.log("stageUrl:next");
-	if (stageUrl != null) {
+	if (stageKeyword != null) {
+		let msg = await skstUtil.generateTogetherGamewithUrl(inputMsg)
 		return client.replyMessage(
 			replyToken,
-			stageUrl
+			msg
 		);
 	}
 	//圖片指令
@@ -480,14 +482,12 @@ async function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 		
 		let stageKeyword = skstUtil.getMonstrikeUrlStageStr(inputMsg);
 		if (stageKeyword != null) {
-			/*
 			//TODO 獨立成一個方法
 			
 			let ansData = skstUtil.selectKeySet(stageData, stageKeyword);
 			let msg = "";
 			if (ansData.length > 0) {
 				ansData = ansData.slice(0, 5);
-				/*
 				let body = ansData.map((data) => ({
 					thumbnailImageUrl: data.picUrl,
 					title: data.name,
@@ -513,37 +513,6 @@ async function executeMonstrikeUrlStageStr(inputMsg, source, userName) {
 				]
 			}
 			return msg;
-			*/
-			// gamewith url
-			let gamewithAppPrefix = "gamewith://line?message_url=";
-			let messageUrl=""
-			let fileName=skstUtil.getMonstrikePassCode(inputMsg)+".txt";
-			app.use('/static', express.static('/tmp'));
-			skstUtil.writeFile('/tmp/'+fileName,inputMsg)
-			messageUrl=gamewithAppPrefix+baseURL+'/static/'+fileName.replace("\\","/");
-			//body.unshift({
-			let body={
-				thumbnailImageUrl: "https://gamewith.co.jp/wp-content/themes/corporate2017/images/logo.png",
-				title: "gamewith",
-				actions:[
-						{ label: '開啟招募連結', type: 'uri', uri: messageUrl }
-				],
-			}
-			//line回話
-			msg = [{
-				type: 'template',
-				altText: '已顯示訊息=)',
-				text: "gamewith",
-				template: {
-					type: 'carousel',
-					columns: body,
-				},
-			},
-			]
-			console.log('----finish');
-			return msg;
-			
-			
 		}else{
 			return null;
 		}
