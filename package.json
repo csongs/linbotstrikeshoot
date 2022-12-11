@@ -16,7 +16,7 @@
     "axios": "^0.20.0",
     "cheerio": "^1.0.0-rc.3",
     "cjk-conv": "^1.2.119",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "google-auth-library": "^0.12.0",
     "google-images": "^2.1.0",
     "googleapis": "^19.0.0",
